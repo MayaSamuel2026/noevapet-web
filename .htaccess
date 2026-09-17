@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.noevapet\.de$ [NC]
+RewriteRule ^ https://noevapet.de%{REQUEST_URI} [R=301,L]
