@@ -23,6 +23,53 @@ shutil.copytree(src / 'assets', out / 'assets')
 if (src / 'site.webmanifest').exists():
     shutil.copy2(src / 'site.webmanifest', out / 'site.webmanifest')
 
+# Germany production must start with a genuinely empty customer state.
+# The early prototype carried Milo/Luna demo fallbacks in two pet helpers. We
+# retain demo data in source/QA, but production-de must never auto-create it.
+app = out / 'assets' / 'app.js'
+app_text = app.read_text(encoding='utf-8')
+legacy_seed = "localStorage.setItem('npPets',JSON.stringify(starterPets));\n  return starterPets;"
+seed_count = app_text.count(legacy_seed)
+if seed_count < 2:
+    raise SystemExit(f'Expected at least two legacy starter-pet fallbacks; found {seed_count}')
+app_text = app_text.replace(
+    legacy_seed,
+    "localStorage.setItem('npPets','[]');\n  return [];"
+)
+
+# Clean demo state that may have been written during the brief pre-launch
+# validation window. Real customer-created profiles have generated IDs and are
+# left untouched.
+fresh_guard = r"""
+// NOEVAPET DE PRODUCTION — fresh visitors begin without demo pets.
+(function npGermanyFreshPetState(){
+  try{
+    const raw=localStorage.getItem('npPets');
+    if(raw===null){
+      localStorage.setItem('npPets','[]');
+      localStorage.removeItem('npActivePetId');
+      return;
+    }
+    const pets=JSON.parse(raw);
+    const untouchedDemo=Array.isArray(pets) && pets.length===2 &&
+      pets[0]?.id==='milo' && pets[1]?.id==='luna';
+    if(untouchedDemo){
+      localStorage.setItem('npPets','[]');
+      localStorage.removeItem('npActivePetId');
+      ['milo','luna'].forEach(id=>{
+        localStorage.removeItem(`npRoutine:${id}`);
+        localStorage.removeItem(`npNeeds:${id}`);
+        localStorage.removeItem(`npPlan:${id}`);
+      });
+    }
+  }catch(e){
+    localStorage.setItem('npPets','[]');
+    localStorage.removeItem('npActivePetId');
+  }
+})();
+"""
+app.write_text(fresh_guard + app_text, encoding='utf-8')
+
 # Flatten the German site to the canonical domain root.
 for page in sorted((src / 'de').glob('*.html')):
     text = page.read_text(encoding='utf-8')
@@ -38,6 +85,13 @@ for page in sorted((src / 'de').glob('*.html')):
     # Pages move from /de/ to /, so normalize deploy-time resource references.
     text = text.replace('../assets/', 'assets/')
     text = text.replace('../site.webmanifest', 'site.webmanifest')
+
+    # Avoid a visible demo-pet flash before JavaScript hydrates the empty state.
+    text = text.replace('<span data-active-pet-name>Milo</span>', '<span data-active-pet-name>Tier hinzufügen</span>')
+    text = text.replace('>Warenkorb für Milo<', '>Dein Warenkorb<')
+    text = text.replace('>Milo<', '>Tier hinzufügen<')
+    if page.name == 'index.html':
+        text = text.replace('class="hero6-basket hero8-basket"', 'class="hero6-basket hero8-basket" hidden', 1)
 
     # Canonical Germany URLs. Keep noindex until the commercial launch gate is passed.
     canonical = 'https://noevapet.de/' if page.name == 'index.html' else f'https://noevapet.de/{page.name}'
@@ -68,4 +122,4 @@ for page in sorted((src / 'de').glob('*.html')):
     encoding='utf-8',
 )
 
-print(f'Built Germany-only production site with {len(list(out.glob("*.html")))} HTML pages')
+print(f'Built Germany-only production site with {len(list(out.glob("*.html")))} HTML pages and fresh-user pet state')
