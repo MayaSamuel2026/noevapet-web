@@ -77,10 +77,25 @@ for rel, markers in critical.items():
     if absent:
         raise SystemExit(f'{rel}: Germany regression sentinel missing: {absent}')
 
+# Fresh visitors must never be auto-populated with prototype pets.
+app = (root / 'assets/app.js').read_text(encoding='utf-8', errors='strict')
+if "localStorage.setItem('npPets',JSON.stringify(starterPets))" in app:
+    raise SystemExit('Germany production still auto-seeds starterPets')
+if 'npGermanyFreshPetState' not in app:
+    raise SystemExit('Germany fresh-user pet-state guard missing')
+if "localStorage.setItem('npPets','[]')" not in app:
+    raise SystemExit('Germany production does not initialize empty pet state')
+
+index = (root / 'index.html').read_text(encoding='utf-8', errors='strict')
+if 'class="hero6-basket hero8-basket" hidden' not in index:
+    raise SystemExit('Germany homepage basket must be hidden until a pet is present')
+if '<span data-active-pet-name>Milo</span>' in index:
+    raise SystemExit('Germany homepage leaks demo pet Milo before hydration')
+
 robots = (root / 'robots.txt').read_text(encoding='utf-8')
 if 'Disallow: /' not in robots:
     raise SystemExit('robots.txt must block crawling during pre-launch')
 if (root / 'MARKET.txt').read_text(encoding='utf-8').strip() != 'DE':
     raise SystemExit('MARKET.txt must be DE')
 
-print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; German-only; root-flattened; canonicals correct; crawl lock intact; critical UX sentinels present')
+print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; German-only; root-flattened; canonicals correct; crawl lock intact; fresh-user state empty; critical UX sentinels present')
