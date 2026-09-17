@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "request": {
+    "required": [
+      "name",
+      "email",
+      "topic",
+      "message",
+      "locale"
+    ]
+  },
+  "response": {
+    "required": [
+      "accepted",
+      "reference_id"
+    ]
+  }
+}

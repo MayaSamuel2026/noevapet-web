@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="NoevaPet helps people find pet products that fit their pet, understand the differences and move to retailer checkout with a clear shopping plan.">
+<meta name="theme-color" content="#FCF8F3">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="stylesheet" href="../assets/styles.css">
+<title>NoevaPet — Smart cart</title>
+</head>
+<body class="purchase-page v13-purchase-page">
+
+<header class="topbar v6-topbar">
+ <div class="shell nav v6-nav">
+  <a class="brand v6-brand v13-brand" href="index.html" aria-label="NoevaPet"><img src="../assets/noevapet-logo-v13.png" alt="NoevaPet — Discover better for their tomorrow" class="brand-logo-v13"></a>
+  <nav class="navlinks v6-navlinks">
+   <a href="index.html" class="">Home</a>
+   <a href="how-it-works.html" class="">How it works</a>
+   <a href="pets.html" class="">My pets</a>
+   <a href="tool.html" class="">Pet Match</a>
+   <a href="basket.html" class="nav-cart active">
+    <span>Cart</span><span class="nav-cart-count" data-nav-cart-count>0</span>
+   </a>
+  </nav>
+  <div class="nav-actions">
+   <a class="lang" href="../de/basket.html">DE</a>
+   <a class="v6-pet-switch" href="pets.html" title="Switch pet">
+    <img data-active-pet-photo src="../assets/owner-upload.png" alt=""><span data-active-pet-name>Milo</span>
+   </a>
+  </div>
+ </div>
+</header>
+<main>
+<section class="shell purchase6-intro v13-purchase-hero">
+ <div class="v13-purchase-copy"><div class="eyebrow" id="cart8Eyebrow">Cart for Milo</div>
+ <h1>Less managing. Decide only where it genuinely matters.</h1>
+ <p class="lede">NoevaPet runs the comparison underneath. You only choose the buying route: save more, best balance or keep it as simple as possible.</p></div>
+ <div class="v13-purchase-visual"><img src="../assets/basket-hero-v16.png" alt="Dog and cat resting together"><div class="v13-photo-note">Your pet at the centre.<br>Every day. ♡</div><img class="v13-leaf" src="../assets/v13-sketch-leaf.svg" alt=""></div>
+</section>
+
+<section style="padding:5px 0 48px"><div class="shell">
+ <div class="purchase6-stepper">
+  <div class="purchase6-step active" data-v6-step="1"><div class="n">1</div><img class="purchase6-step-icon" src="../assets/v13-step-cart.svg" alt=""><div><strong>Basket</strong><span>Everything for your pet</span></div></div>
+  <div class="purchase6-step" data-v6-step="2"><div class="n">2</div><img class="purchase6-step-icon" src="../assets/v13-step-route.svg" alt=""><div><strong>Best way to buy</strong><span>NoevaPet optimises</span></div></div>
+  <div class="purchase6-step" data-v6-step="3"><div class="n">3</div><img class="purchase6-step-icon" src="../assets/v13-step-check.svg" alt=""><div><strong>Review</strong><span>A quick check</span></div></div>
+  <div class="purchase6-step" data-v6-step="4"><div class="n">4</div><img class="purchase6-step-icon" src="../assets/v13-step-store.svg" alt=""><div><strong>Retailer checkout</strong><span>NoevaPet stays open</span></div></div>
+ </div>
+
+ <section class="purchase6-stage active" data-v6-stage="1">
+  <div class="purchase6-grid">
+   <article class="card purchase6-box">
+    <div class="smallcap">01 · Basket</div>
+    <div class="purchase6-pet"><img data-active-pet-photo src="../assets/owner-upload.png" alt=""><div><strong data-active-pet-name>Milo</strong><span data-active-pet-meta>4 years · large dog</span></div></div>
+    <div class="cart6-list" id="cart6List"></div>
+    <div class="cart6-remove-zone" id="cart6RemoveZone">↙ Drop here to remove from this shopping trip</div>
+    <div class="purchase6-total"><div><span><span data-cart6-count>0</span> items</span></div><strong data-cart6-total>€0.00</strong></div>
+   </article>
+
+   <aside class="purchase6-summary">
+    <div class="eyebrow">NoevaPet</div>
+    <h2>We now find the calmest sensible buying route.</h2>
+    <div class="purchase6-confidence">
+      <div><b>✓</b>Locked products stay exactly the same.</div>
+      <div><b>✓</b>Prices, retailers and delivery are considered together.</div>
+      <div><b>✓</b>You get a few clear options instead of a comparison table.</div>
+    </div>
+    <p style="font-size:10px">Tip: drag an item out of the basket and drop it in the remove area below.</p>
+    <div class="purchase6-actions"><button class="pill primary" data-v6-next="2">Optimise my purchase →</button></div>
+   </aside>
+  </div>
+ </section>
+
+ <section class="purchase6-stage" data-v6-stage="2">
+  <div class="purchase6-grid">
+   <article class="purchase6-summary">
+    <div class="smallcap">02 · Best way to buy</div>
+    <div class="buy6-price" data-v6-opt-price>€0.00</div>
+    <div class="buy6-save" data-v6-saving></div>
+    <p style="font-size:10px">🚚 <span data-v6-deliveries></span> · prices checked now</p>
+    <div class="smallcap">What matters most?</div>
+    <div class="buy6-tabs">
+      <button data-v6-buy-mode="save"><strong>Save more</strong><span>lowest total</span></button>
+      <button data-v6-buy-mode="balance" class="active"><strong>Best balance</strong><span>recommended</span></button>
+      <button data-v6-buy-mode="simple"><strong>Simplify</strong><span>fewer handoffs</span></button>
+    </div>
+    <div class="buy6-why">
+      <div class="buy6-explain"><h3 id="buy6WhyTitle"></h3><p id="buy6WhyCopy"></p><div class="buy6-list" id="buy6WhyList"></div></div>
+      <div class="buy6-stats" id="buy6Stats"></div>
+    </div>
+   </article>
+
+   <aside class="card purchase6-box">
+    <div class="smallcap">What the route looks like</div>
+    <h2 class="display" style="font-size:31px">Why does the price change?</h2>
+    <p style="font-size:11px">The choice changes retailer count, deliveries and convenience. NoevaPet makes those trade-offs visible here.</p>
+    <div class="route6" id="buy6Route"></div>
+    <div class="purchase6-confidence">
+      <div><b>✓</b>Your usual products stay</div>
+      <div><b>✓</b>Delivery included in the comparison</div>
+      <div><b>✓</b>No hidden retailer preference</div>
+    </div>
+    <div class="purchase6-actions"><button class="pill primary" data-v6-next="3">Continue to review →</button></div>
+   </aside>
+  </div>
+ </section>
+
+ <section class="purchase6-stage" data-v6-stage="3">
+  <div class="purchase6-grid">
+   <article class="card purchase6-box">
+    <div class="smallcap">03 · Just a quick check</div>
+    <h2 class="display" style="font-size:34px">Almost there.</h2>
+    <div class="review6-list">
+      <div class="review6-row"><div><strong data-active-pet-name>Milo</strong><br><span><span data-cart6-count>0</span> items · current shopping trip</span></div><button>›</button></div>
+      <div class="review6-row"><div><strong>Delivery address</strong><br><span>Home · not production-bound yet</span></div><button>›</button></div>
+      <div class="review6-row"><div><strong>Payment</strong><br><span>Completed with each retailer</span></div><button>›</button></div>
+      <div class="review6-row"><div><strong>Buying route</strong><br><span>Opens as a retailer hub in the next step</span></div><button>›</button></div>
+    </div>
+   </article>
+   <aside class="purchase6-summary">
+    <div class="smallcap">Your chosen route</div>
+    <div class="buy6-price" data-v6-opt-price>€0.00</div>
+    <div class="buy6-save" data-v6-saving></div>
+    <div class="purchase6-confidence">
+      <div><b>✓</b>You do not pay on NoevaPet.</div>
+      <div><b>✓</b>Each retailer opens separately.</div>
+      <div><b>✓</b>This NoevaPet tab stays open as your hub.</div>
+    </div>
+    <div class="purchase6-actions"><button class="pill primary" data-v6-next="4">Prepare retailer checkouts →</button></div>
+   </aside>
+  </div>
+ </section>
+
+ <section class="purchase6-stage checkout8-stage" data-v6-stage="4">
+  <article class="card checkout8-shell" id="checkout8Shell">
+   <div class="checkout8-head">
+    <div>
+     <div class="smallcap">04 · Retailer checkout</div>
+     <h2>Two retailer carts. One NoevaPet hub.</h2>
+     <p>NoevaPet opens the retailer carts one at a time in new tabs. This page stays open and shows you what comes next.</p>
+    </div>
+    <div class="checkout8-summary">
+     <img data-active-pet-photo src="../assets/owner-upload.png" alt="">
+     <div><strong data-active-pet-name>Milo</strong><span data-active-pet-meta>4 years · large dog</span></div>
+     <div class="checkout8-price"><span>Plan total</span><b data-v6-opt-price>€0.00</b></div>
+    </div>
+   </div>
+
+   <div class="checkout8-before">
+    <strong>Before we open anything:</strong>
+    <span>Your next click opens the first prepared retailer cart in a new tab. You pay on the retailer site. NoevaPet stays open here.</span>
+   </div>
+
+   <div class="checkout8-retailer-list" id="checkout6Hub"></div>
+
+   <div class="checkout8-next" id="checkout8NextWrap">
+    <button class="pill primary" id="checkout8NextRetailer"></button>
+    <span id="checkout8NextHint"></span>
+   </div>
+
+   <div class="checkout6-progress checkout8-progress">
+    <div id="checkout6ProgressText"></div>
+    <div class="checkout6-bar"><i id="checkout6ProgressBar"></i></div>
+   </div>
+
+   <div class="checkout7-confirm checkout8-confirm" id="checkout7Confirm">
+    <button class="pill primary" id="checkout7Complete">I have completed the retailer checkouts ✓</button>
+    <div class="v7-helper">NoevaPet cannot automatically confirm retailer payment, so you close the shopping session here yourself.</div>
+   </div>
+
+   <div class="checkout6-note">Shipping, tracking, returns and support remain with each retailer. NoevaPet does not store retailer passwords.</div>
+  </article>
+
+  <div class="checkout7-done checkout8-done checkout18-done" id="checkout7Done">
+   <div class="checkout7-check">✓</div>
+   <div class="smallcap">Done for today</div>
+   <h2><span data-active-pet-name>Milo</span> is covered.</h2>
+   <p>You confirmed that the retailer checkouts are complete. NoevaPet now keeps a compact summary of this shopping session with the pet profile.</p>
+   <div class="checkout18-receipt" id="checkout18Receipt"></div>
+   <div class="hero-actions checkout18-actions"><button class="pill primary" type="button" id="checkout18Print">Print / save as PDF</button><a class="pill" id="checkout18PetLink" href="pets.html#purchase-history">View with <span data-active-pet-name>Milo</span></a><a class="pill soft" href="index.html">Back to home</a></div>
+  </div>
+ </section>
+</div></section>
+
+<div id="v6Toast" class="toast"></div>
+</main><footer class="footer v7-footer">
+ <div class="shell footer-grid">
+  <div class="v7-footer-brand">
+   <div class="v7-footer-lockup v13-footer-lockup"><img src="../assets/noevapet-logo-v13.png" alt="NoevaPet — Discover better for their tomorrow"></div>
+   <p>NoevaPet helps you find products that fit your pet, understand the differences and move to the retailer with one clear shopping plan.</p>
+   <p class="v7-footer-disclosure">NoevaPet may earn a commission on referred purchases. It does not change your price or the recommendation order. <a href="how-we-make-money.html">About transparency</a></p>
+  </div>
+  <div><h4>Explore</h4><a href="tool.html">Pet Match</a><a href="explore.html">Explore needs</a><a href="how-it-works.html">How it works</a><a href="basket.html">Cart</a><a href="pets.html">My pets</a></div>
+  <div><h4>NoevaPet</h4><a href="about.html">About NoevaPet</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div>
+  <div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="imprint.html">Imprint</a><a href="terms.html">Terms</a><a href="cookies.html">Cookies</a></div>
+ </div>
+</footer>
+
+<div id="cookieBanner" class="cookie-banner">
+ <p><strong>Cookies.</strong> This pre-launch version only uses local storage for the current interactions. The final consent setup will be connected before public launch.</p>
+ <div style="display:flex;gap:8px">
+   <button class="pill soft" data-cookie="essential">Essential only</button>
+   <button class="pill primary" data-cookie="all">Accept</button>
+ </div>
+</div>
+
+<script src="../assets/runtime-config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

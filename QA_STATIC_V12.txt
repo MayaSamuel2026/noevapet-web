@@ -1,0 +1,68 @@
+PASS no V11 files removed (0 removed)
+PASS only targeted V11 files changed (9 modified)
+PASS only approved V12 files added (3 added)
+PASS V11 continuity retained: assets/app.js
+PASS V11 continuity retained: assets/runtime-config.js
+PASS V11 continuity retained: de/index.html
+PASS V11 continuity retained: en/index.html
+PASS V11 continuity retained: de/tool.html
+PASS V11 continuity retained: en/tool.html
+PASS V11 continuity retained: de/pets.html
+PASS V11 continuity retained: en/pets.html
+PASS V11 continuity retained: de/basket.html
+PASS V11 continuity retained: en/basket.html
+PASS V11 continuity retained: de/purchase.html
+PASS V11 continuity retained: en/purchase.html
+PASS V11 continuity retained: bindings/catalog.contract.json
+PASS V11 continuity retained: bindings/recommendation.contract.json
+PASS V11 continuity retained: bindings/profile.contract.json
+PASS V11 continuity retained: bindings/retailer-handoff.contract.json
+PASS HTML page count retained (36)
+PASS all HTML local references resolve (0 missing)
+PASS pre-launch noindex retained on all applicable pages (0 missing)
+PASS all DE/EN page headers use canonical NoevaPet mark (0 exceptions)
+PASS CSS parses without top-level syntax errors (0)
+PASS all CSS local url() references resolve (0 missing)
+PASS footer uses the same canonical NoevaPet mark asset
+PASS valid SVG XML: assets/noevapet-mark.svg
+PASS non-trivial illustration asset: assets/noevapet-mark.svg
+PASS valid SVG XML: assets/step-profile.svg
+PASS non-trivial illustration asset: assets/step-profile.svg
+PASS valid SVG XML: assets/step-needs.svg
+PASS non-trivial illustration asset: assets/step-needs.svg
+PASS valid SVG XML: assets/step-plan.svg
+PASS non-trivial illustration asset: assets/step-plan.svg
+PASS valid SVG XML: assets/step-choice.svg
+PASS non-trivial illustration asset: assets/step-choice.svg
+PASS valid SVG XML: assets/step-retailer.svg
+PASS non-trivial illustration asset: assets/step-retailer.svg
+PASS de: dedicated V12 hero visual wired
+PASS de: homepage hero image no longer reused
+PASS de: five process cards retained
+PASS de: five process illustrations wired
+PASS de: explanatory headline retained directly after hero
+PASS de: downstream trust/FAQ content retained
+PASS en: dedicated V12 hero visual wired
+PASS en: homepage hero image no longer reused
+PASS en: five process cards retained
+PASS en: five process illustrations wired
+PASS en: explanatory headline retained directly after hero
+PASS en: downstream trust/FAQ content retained
+PASS new hero asset resolution sufficient for designed column (666x401)
+PASS hero image decodes successfully
+PASS valid JSON: bindings/contact.contract.json
+PASS valid JSON: bindings/catalog.contract.json
+PASS valid JSON: bindings/recommendation.contract.json
+PASS valid JSON: bindings/profile.contract.json
+PASS valid JSON: bindings/retailer-handoff.contract.json
+PASS valid JSON: site.webmanifest
+PASS runtime continuity marker present: npActivePetId
+PASS runtime continuity marker present: npPlan
+PASS runtime continuity marker present: npPets
+PASS runtime continuity marker present: data-nav-cart-count
+PASS runtime continuity marker present: showPurchaseStep
+PASS V12 targeted CSS override present: min-height:342px!important
+PASS V12 targeted CSS override present: grid-template-columns:minmax(170px,.42fr) minmax(0,1.18fr)!important
+PASS V12 targeted CSS override present: max-width:150px!important
+
+SUMMARY: 66 PASS / 0 FAIL

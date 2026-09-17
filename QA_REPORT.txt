@@ -1,0 +1,15 @@
+NOEVAPET PRE-DEPLOYMENT V1 — QA
+EN pages: 17
+DE pages: 17
+Language page parity: PASS
+Broken local links/assets: 0
+Core assets: PASS
+  PASS noevapet-icon.png
+  PASS noevapet-logo.png
+  PASS hero-pets.png
+  PASS owner-laptop.png
+  PASS owner-upload.png
+  PASS pet-essentials.png
+  PASS icon-32.png
+  PASS styles.css
+  PASS app.js

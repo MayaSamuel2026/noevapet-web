@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "profile": {
+    "required": [
+      "id",
+      "name",
+      "species",
+      "locale"
+    ],
+    "optional": [
+      "photo_url",
+      "age",
+      "size",
+      "routine",
+      "sensitivities",
+      "preferences"
+    ]
+  },
+  "operations": [
+    "create",
+    "update",
+    "delete",
+    "list"
+  ]
+}

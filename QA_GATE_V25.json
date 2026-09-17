@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "pass": 1418,
+  "total": 1418,
+  "suites": [
+    {
+      "suite": "v22-state-tests.mjs",
+      "status": "PASS",
+      "pass": 25,
+      "total": 25,
+      "stderr": ""
+    },
+    {
+      "suite": "v23-exact-product-tests.mjs",
+      "status": "PASS",
+      "pass": 14,
+      "total": 14,
+      "stderr": ""
+    },
+    {
+      "suite": "v24-repurchase-tests.mjs",
+      "status": "PASS",
+      "pass": 10,
+      "total": 10,
+      "stderr": ""
+    },
+    {
+      "suite": "v25-interaction-tests.mjs",
+      "status": "PASS",
+      "pass": 11,
+      "total": 11,
+      "stderr": ""
+    },
+    {
+      "suite": "v25-state-matrix-tests.mjs",
+      "status": "PASS",
+      "pass": 20,
+      "total": 20,
+      "stderr": ""
+    },
+    {
+      "suite": "v25-static-check.mjs",
+      "status": "PASS",
+      "pass": 1338,
+      "total": 1338,
+      "stderr": ""
+    }
+  ],
+  "generated_at": "2026-09-17T14:44:35.043Z",
+  "browser_e2e": "Configured separately with Playwright/GitHub Actions; not executed by deterministic gate."
+}

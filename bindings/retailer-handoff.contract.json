@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "modes": [
+    "prefilled_cart",
+    "product_deeplink"
+  ],
+  "request": {
+    "required": [
+      "retailer_id",
+      "items",
+      "market"
+    ]
+  },
+  "response": {
+    "required": [
+      "mode",
+      "url"
+    ],
+    "optional": [
+      "expires_at",
+      "affiliate_attribution_id"
+    ]
+  }
+}
