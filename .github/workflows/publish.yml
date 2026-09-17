@@ -40,7 +40,8 @@ jobs:
           set -euo pipefail
           SRC="$RUNNER_TEMP/noevapet-src"
           DEPLOY="$RUNNER_TEMP/noevapet-deploy"
-          rm -rf "$SRC" "$DEPLOY"
+          DE_DEPLOY="$RUNNER_TEMP/noevapet-de"
+          rm -rf "$SRC" "$DEPLOY" "$DE_DEPLOY"
           mkdir -p "$SRC" "$DEPLOY"
           unzip -q NoevaPet_PreDeployment_V26.zip -d "$SRC"
 
@@ -58,6 +59,7 @@ jobs:
 
           cp -a "$SITE_ROOT/." "$DEPLOY/"
           printf '%s\n' "$DEPLOY" > "$RUNNER_TEMP/deploy_path"
+          printf '%s\n' "$DE_DEPLOY" > "$RUNNER_TEMP/de_deploy_path"
 
       - name: JavaScript syntax check
         shell: bash
@@ -93,12 +95,28 @@ jobs:
           DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
           python3 deployment/release_patch.py "$DEPLOY"
 
-      - name: Qualify static site
+      - name: Qualify full multi-market source
         shell: bash
         run: |
           set -euo pipefail
           DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
           python3 deployment/qualify_static.py "$DEPLOY"
+
+      - name: Build Germany-only production site
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          DE_DEPLOY="$(cat "$RUNNER_TEMP/de_deploy_path")"
+          python3 deployment/build_germany.py "$DEPLOY" "$DE_DEPLOY"
+
+      - name: Qualify Germany production site
+        shell: bash
+        run: |
+          set -euo pipefail
+          DE_DEPLOY="$(cat "$RUNNER_TEMP/de_deploy_path")"
+          node --check "$DE_DEPLOY/assets/app.js"
+          python3 deployment/qualify_germany.py "$DE_DEPLOY"
 
       - name: Strip source-only QA and release controls
         shell: bash
@@ -110,7 +128,7 @@ jobs:
           rm -f "$DEPLOY"/QA_REPORT_*.txt "$DEPLOY"/QA_STATIC_*.json "$DEPLOY"/QA_STATE_*.json "$DEPLOY"/QA_QUALIFICATION_GATE_*.md || true
           printf '%s\n' 'NoevaPet V26 — qualified pre-launch production shell' > "$DEPLOY/VERSION.txt"
 
-      - name: Publish clean production branch
+      - name: Publish international production branch
         shell: bash
         run: |
           set -euo pipefail
@@ -121,6 +139,21 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
           git add -A
-          git commit -qm "Production deploy ${GITHUB_SHA}"
+          git commit -qm "International production deploy ${GITHUB_SHA}"
           git branch -M production
           git push --force origin production
+
+      - name: Publish Germany production branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          DE_DEPLOY="$(cat "$RUNNER_TEMP/de_deploy_path")"
+          cd "$DE_DEPLOY"
+          git init -q
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git add -A
+          git commit -qm "Germany production deploy ${GITHUB_SHA}"
+          git branch -M production-de
+          git push --force origin production-de
