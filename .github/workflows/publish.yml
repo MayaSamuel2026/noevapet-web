@@ -1,0 +1,119 @@
+name: Qualify and publish NoevaPet
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'NoevaPet_PreDeployment_V26.zip'
+      - 'deployment/**'
+      - '.github/workflows/publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: noevapet-production
+  cancel-in-progress: true
+
+jobs:
+  qualify-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require approved V26 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f NoevaPet_PreDeployment_V26.zip || {
+            echo 'Approved payload missing: NoevaPet_PreDeployment_V26.zip'
+            exit 1
+          }
+
+      - name: Unpack approved V26
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="$RUNNER_TEMP/noevapet-src"
+          DEPLOY="$RUNNER_TEMP/noevapet-deploy"
+          rm -rf "$SRC" "$DEPLOY"
+          mkdir -p "$SRC" "$DEPLOY"
+          unzip -q NoevaPet_PreDeployment_V26.zip -d "$SRC"
+
+          # Accept either a flat ZIP or one wrapper directory.
+          if [ -f "$SRC/index.html" ]; then
+            SITE_ROOT="$SRC"
+          else
+            mapfile -t ROOTS < <(find "$SRC" -mindepth 1 -maxdepth 2 -type f -name index.html -printf '%h\n' | sort -u)
+            if [ "${#ROOTS[@]}" -ne 1 ]; then
+              echo "Could not identify one deployable V26 site root. Found: ${ROOTS[*]-none}"
+              exit 1
+            fi
+            SITE_ROOT="${ROOTS[0]}"
+          fi
+
+          cp -a "$SITE_ROOT/." "$DEPLOY/"
+          printf '%s\n' "$DEPLOY" > "$RUNNER_TEMP/deploy_path"
+
+      - name: JavaScript syntax check
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          while IFS= read -r -d '' f; do
+            node --check "$f"
+          done < <(find "$DEPLOY" -type f -name '*.js' -print0)
+
+      - name: Run packaged deterministic QA when available
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          cd "$DEPLOY"
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ]; then npm ci; else npm install; fi
+            QA_SCRIPT="$(node -e "const p=require('./package.json'); const s=p.scripts||{}; process.stdout.write(s['qa:ci']?'qa:ci':s['qa:all']?'qa:all':s['qa']?'qa':'')")"
+            if [ -n "$QA_SCRIPT" ]; then
+              npm run "$QA_SCRIPT"
+            else
+              echo 'package.json present but no qa:ci / qa:all / qa script; continuing with release qualification gate.'
+            fi
+          else
+            echo 'No package.json in payload; continuing with release qualification gate.'
+          fi
+
+      - name: Qualify static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          python3 deployment/qualify_static.py "$DEPLOY"
+
+      - name: Strip source-only QA and release controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          rm -rf "$DEPLOY/.github" "$DEPLOY/qa" "$DEPLOY/node_modules" || true
+          rm -f "$DEPLOY/package.json" "$DEPLOY/package-lock.json" "$DEPLOY"/RUN_QA_*.cmd || true
+          rm -f "$DEPLOY"/QA_REPORT_*.txt "$DEPLOY"/QA_STATIC_*.json "$DEPLOY"/QA_STATE_*.json "$DEPLOY"/QA_QUALIFICATION_GATE_*.md || true
+          printf '%s\n' 'NoevaPet V26 — qualified pre-launch production shell' > "$DEPLOY/VERSION.txt"
+
+      - name: Publish clean production branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          cd "$DEPLOY"
+          git init -q
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git add -A
+          git commit -qm "Production deploy ${GITHUB_SHA}"
+          git branch -M production
+          git push --force origin production
