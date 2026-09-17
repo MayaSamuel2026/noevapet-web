@@ -10,7 +10,7 @@ root = Path(sys.argv[1]).resolve()
 required = [
     'index.html', 'tool.html', 'basket.html', 'pets.html', 'how-it-works.html',
     'faq.html', 'contact.html', 'privacy.html', 'imprint.html', 'terms.html', 'cookies.html',
-    'assets/styles.css', 'assets/app.js', 'robots.txt', 'VERSION.txt', 'MARKET.txt'
+    'assets/styles.css', 'assets/app.js', 'robots.txt', 'VERSION.txt', 'MARKET.txt', '.htaccess'
 ]
 missing = [p for p in required if not (root / p).exists()]
 if missing:
@@ -92,10 +92,22 @@ if 'class="hero6-basket hero8-basket" hidden' not in index:
 if '<span data-active-pet-name>Milo</span>' in index:
     raise SystemExit('Germany homepage leaks demo pet Milo before hydration')
 
+# Pet-specific surfaces cannot be entered before profile creation.
+for rel in ('tool.html', 'basket.html'):
+    text = (root / rel).read_text(encoding='utf-8', errors='strict')
+    if 'data-noevapet-de-pet-guard' not in text or "location.replace('pets.html')" not in text:
+        raise SystemExit(f'{rel}: direct-entry pet guard missing')
+
+ht = (root / '.htaccess').read_text(encoding='utf-8')
+if 'www\\.noevapet\\.de' not in ht or 'https://noevapet.de%{REQUEST_URI}' not in ht:
+    raise SystemExit('.htaccess must canonicalize www.noevapet.de to noevapet.de')
+if '%{HTTPS} !=on' not in ht:
+    raise SystemExit('.htaccess must enforce HTTPS')
+
 robots = (root / 'robots.txt').read_text(encoding='utf-8')
 if 'Disallow: /' not in robots:
     raise SystemExit('robots.txt must block crawling during pre-launch')
 if (root / 'MARKET.txt').read_text(encoding='utf-8').strip() != 'DE':
     raise SystemExit('MARKET.txt must be DE')
 
-print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; German-only; root-flattened; canonicals correct; crawl lock intact; fresh-user state empty; critical UX sentinels present')
+print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; German-only; root-flattened; canonicals correct; crawl lock intact; fresh-user state empty; pet-route guards active; canonical host enforced')
