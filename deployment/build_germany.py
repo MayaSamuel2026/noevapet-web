@@ -70,6 +70,10 @@ fresh_guard = r"""
 """
 app.write_text(fresh_guard + app_text, encoding='utf-8')
 
+# Direct Pet Match / cart URLs require a real saved pet. This runs before the
+# application bundle to avoid a flash of prototype/default pet content.
+pet_required_guard = """<script data-noevapet-de-pet-guard>(function(){try{var p=JSON.parse(localStorage.getItem('npPets')||'[]');var demo=Array.isArray(p)&&p.length===2&&p[0]&&p[0].id==='milo'&&p[1]&&p[1].id==='luna';if(!Array.isArray(p)||!p.length||demo){if(demo){localStorage.setItem('npPets','[]');localStorage.removeItem('npActivePetId');}location.replace('pets.html');}}catch(e){location.replace('pets.html');}})();</script>"""
+
 # Flatten the German site to the canonical domain root.
 for page in sorted((src / 'de').glob('*.html')):
     text = page.read_text(encoding='utf-8')
@@ -89,9 +93,13 @@ for page in sorted((src / 'de').glob('*.html')):
     # Avoid a visible demo-pet flash before JavaScript hydrates the empty state.
     text = text.replace('<span data-active-pet-name>Milo</span>', '<span data-active-pet-name>Tier hinzufügen</span>')
     text = text.replace('>Warenkorb für Milo<', '>Dein Warenkorb<')
-    text = text.replace('>Milo<', '>Tier hinzufügen<')
     if page.name == 'index.html':
         text = text.replace('class="hero6-basket hero8-basket"', 'class="hero6-basket hero8-basket" hidden', 1)
+
+    # Pet Match and cart are pet-specific surfaces. Direct entry without a real
+    # saved pet always returns the visitor to the profile creation page.
+    if page.name in {'tool.html', 'basket.html'}:
+        text = text.replace('</head>', pet_required_guard + '\n</head>', 1)
 
     # Canonical Germany URLs. Keep noindex until the commercial launch gate is passed.
     canonical = 'https://noevapet.de/' if page.name == 'index.html' else f'https://noevapet.de/{page.name}'
@@ -105,6 +113,15 @@ for page in sorted((src / 'de').glob('*.html')):
     text = re.sub(r'<link\b[^>]*hreflang=["\'][^"\']*["\'][^>]*>', '', text, flags=re.I)
 
     (out / page.name).write_text(text, encoding='utf-8')
+
+# Canonical host + HTTPS. Hostinger shared hosting/LiteSpeed honors .htaccess.
+(out / '.htaccess').write_text(
+    'RewriteEngine On\n'
+    'RewriteCond %{HTTPS} !=on [OR]\n'
+    'RewriteCond %{HTTP_HOST} ^www\\.noevapet\\.de$ [NC]\n'
+    'RewriteRule ^ https://noevapet.de%{REQUEST_URI} [R=301,L]\n',
+    encoding='utf-8',
+)
 
 # Pre-launch crawl lock at server level as well as meta robots.
 (out / 'robots.txt').write_text('User-agent: *\nDisallow: /\n', encoding='utf-8')
@@ -122,4 +139,4 @@ for page in sorted((src / 'de').glob('*.html')):
     encoding='utf-8',
 )
 
-print(f'Built Germany-only production site with {len(list(out.glob("*.html")))} HTML pages and fresh-user pet state')
+print(f'Built Germany-only production site with {len(list(out.glob("*.html")))} HTML pages, fresh-user pet state and canonical-host guard')
