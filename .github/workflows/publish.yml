@@ -86,6 +86,13 @@ jobs:
             echo 'No package.json in payload; continuing with release qualification gate.'
           fi
 
+      - name: Apply pre-launch production presentation patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY="$(cat "$RUNNER_TEMP/deploy_path")"
+          python3 deployment/release_patch.py "$DEPLOY"
+
       - name: Qualify static site
         shell: bash
         run: |
