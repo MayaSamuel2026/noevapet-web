@@ -1,0 +1,10 @@
+{
+  "schema": "noevapet-source-registry/1.0",
+  "market": "DE",
+  "sources": [
+    {"id":"fressnapf-de-dog-food","name":"Fressnapf DE — Hundefutter","canonical_url":"https://www.fressnapf.de/c/hund/hundefutter/","source_type":"retailer_category","adapter_key":"generic_product_listing","retailer_id":"fressnapf","watch_enabled":true,"live_enabled":true,"terms_review_status":"review_required","robots_policy":"obey","max_bytes":3000000},
+    {"id":"fressnapf-de-cat-food","name":"Fressnapf DE — Katzenfutter","canonical_url":"https://www.fressnapf.de/c/katze/katzenfutter/","source_type":"retailer_category","adapter_key":"generic_product_listing","retailer_id":"fressnapf","watch_enabled":true,"live_enabled":true,"terms_review_status":"review_required","robots_policy":"obey","max_bytes":3000000},
+    {"id":"zooplus-de-dog-dry","name":"Zooplus DE — Hundetrockenfutter","canonical_url":"https://www.zooplus.de/shop/hunde/hundefutter_trockenfutter","source_type":"retailer_category","adapter_key":"generic_product_listing","retailer_id":"zooplus","watch_enabled":true,"live_enabled":true,"terms_review_status":"review_required","robots_policy":"obey","max_bytes":3000000},
+    {"id":"zooplus-de-cat-dry","name":"Zooplus DE — Katzentrockenfutter","canonical_url":"https://www.zooplus.de/shop/katzen/katzenfutter_trockenfutter","source_type":"retailer_category","adapter_key":"generic_product_listing","retailer_id":"zooplus","watch_enabled":true,"live_enabled":true,"terms_review_status":"review_required","robots_policy":"obey","max_bytes":3000000}
+  ]
+}
