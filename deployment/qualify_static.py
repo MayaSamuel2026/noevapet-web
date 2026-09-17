@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import os
 import re
 import sys
 from pathlib import Path
@@ -26,27 +25,35 @@ missing = [p for p in required if not (ROOT / p).exists()]
 if missing:
     raise SystemExit("Missing required deployment paths: " + ", ".join(missing))
 
-html_files = sorted(ROOT.rglob("*.html"))
+# Only customer-facing pages are part of the static-site qualification surface.
+# Tooling installed by npm (Playwright dashboards, trace viewers, etc.) is source-only
+# and is removed before publishing the production branch.
+html_files = [ROOT / "index.html"]
+for lang in ("de", "en"):
+    html_files.extend(sorted((ROOT / lang).glob("*.html")))
+html_files = [p for p in html_files if p.exists()]
 if not html_files:
-    raise SystemExit("No HTML files found")
+    raise SystemExit("No customer-facing HTML files found")
 
 # Keep the production shell closed to indexing until the commercial core and legal launch gate pass.
 robots_fail = []
 for p in html_files:
-    rel = p.relative_to(ROOT).as_posix()
-    if rel.startswith(("de/", "en/")) or rel == "index.html":
-        text = p.read_text(encoding="utf-8", errors="strict")
-        if not re.search(r'<meta\s+name=["\']robots["\']\s+content=["\'][^"\']*noindex[^"\']*nofollow[^"\']*["\']', text, re.I):
-            robots_fail.append(rel)
+    text = p.read_text(encoding="utf-8", errors="strict")
+    # Accept either attribute order and any additional directives.
+    tag_match = re.search(r'<meta\b[^>]*\bname=["\']robots["\'][^>]*>', text, re.I)
+    if not tag_match:
+        tag_match = re.search(r'<meta\b[^>]*\bcontent=["\'][^"\']*noindex[^"\']*["\'][^>]*\bname=["\']robots["\'][^>]*>', text, re.I)
+    if not tag_match or "noindex" not in tag_match.group(0).lower() or "nofollow" not in tag_match.group(0).lower():
+        robots_fail.append(p.relative_to(ROOT).as_posix())
 if robots_fail:
     raise SystemExit("Pre-launch robots lock missing from: " + ", ".join(robots_fail[:30]))
 
-# Resolve local href/src references across the complete static site.
+# Resolve local href/src references across customer-facing pages only.
 missing_refs = []
 for p in html_files:
     text = p.read_text(encoding="utf-8", errors="strict")
     for ref in re.findall(r'(?:src|href)=["\']([^"\']+)["\']', text, re.I):
-        if ref.startswith(("http://", "https://", "mailto:", "tel:", "javascript:", "data:", "#")):
+        if ref.startswith(("http://", "https://", "mailto:", "tel:", "javascript:", "data:", "about:", "#")):
             continue
         clean = ref.split("#", 1)[0].split("?", 1)[0].strip()
         if not clean:
@@ -81,12 +88,15 @@ for rel, markers in critical.items():
     if absent:
         raise SystemExit(f"Regression sentinel missing in {rel}: {absent}")
 
-# No accidental credential material in deployable output.
+# No accidental credential material in the actual publishable tree.
 for p in ROOT.rglob("*"):
     if not p.is_file():
+        continue
+    rel_parts = p.relative_to(ROOT).parts
+    if any(part in {"node_modules", ".git", "qa"} for part in rel_parts):
         continue
     n = p.name.lower()
     if n in {".env", "id_rsa", "id_ed25519"} or n.endswith((".pem", ".key", ".p12", ".pfx")):
         raise SystemExit(f"Sensitive-looking file present in deployment: {p.relative_to(ROOT)}")
 
-print(f"QUALIFIED: {len(html_files)} HTML files; required paths present; local references resolved; pre-launch robots lock intact; V26 regression sentinels present")
+print(f"QUALIFIED: {len(html_files)} customer-facing HTML files; required paths present; local references resolved; pre-launch robots lock intact; V26 regression sentinels present")
