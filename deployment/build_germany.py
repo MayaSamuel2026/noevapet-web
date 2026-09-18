@@ -132,7 +132,7 @@ for page in sorted((src / 'de').glob('*.html')):
 # and SDK but performs no automatic tracking; customer flows opt in explicitly.
 (out / '.well-known').mkdir(parents=True, exist_ok=True)
 (out / '.well-known' / 'noeva-core-binding.json').write_text(
-    '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.3.0","mode":"registered-surface","data_bound":false,"capabilities":["health"]}\\n',
+    '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.3.0","mode":"registered-surface","data_bound":false,"capabilities":["health","event"]}\\n',
     encoding='utf-8',
 )
 shutil.copy2(src.parent / 'deployment' / 'noeva_core_binding.js', out / 'assets' / 'noeva-core-binding.js')
