@@ -13,6 +13,7 @@
     verticalId:VERTICAL,
     origin:CORE,
     capabilities:Object.freeze({health:true,event:true,data:false,decision:false,commercial:false}),
-    health:()=>request('/api/public/v1/binding/health?vertical_id='+VERTICAL)
+    health:()=>request('/api/public/v1/binding/health?vertical_id='+VERTICAL),
+    event:(event_type,payload={})=>request('/api/public/v1/events',{method:'POST',body:JSON.stringify({vertical_id:VERTICAL,event_type,payload})})
   };
 })();
