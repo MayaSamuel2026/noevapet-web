@@ -128,6 +128,20 @@ for page in sorted((src / 'de').glob('*.html')):
 (out / 'VERSION.txt').write_text('NoevaPet V26 — Germany pre-launch production shell\n', encoding='utf-8')
 (out / 'MARKET.txt').write_text('DE\n', encoding='utf-8')
 
+# NOEVA CORE OS v1.3 binding capability. This publishes the binding contract
+# and SDK but performs no automatic tracking; customer flows opt in explicitly.
+(out / '.well-known').mkdir(parents=True, exist_ok=True)
+(out / '.well-known' / 'noeva-core-binding.json').write_text(
+    '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.3.0","mode":"registered-surface","data_bound":false,"capabilities":["health"]}\\n',
+    encoding='utf-8',
+)
+shutil.copy2(src.parent / 'deployment' / 'noeva_core_binding.js', out / 'assets' / 'noeva-core-binding.js')
+for built_page in out.glob('*.html'):
+    html = built_page.read_text(encoding='utf-8')
+    if 'assets/noeva-core-binding.js' not in html:
+        html = html.replace('</head>', '<script src="assets/noeva-core-binding.js" defer></script>\\n</head>', 1)
+        built_page.write_text(html, encoding='utf-8')
+
 # German 404 without introducing a second language or a duplicate application shell.
 (out / '404.html').write_text(
     '<!doctype html><html lang="de"><head><meta charset="utf-8">'
