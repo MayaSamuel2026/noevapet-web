@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 130" fill="none">
+  <rect x="36" y="18" width="90" height="96" rx="18" fill="#FFFDF9" stroke="#BDD5CD" stroke-width="2"/>
+  <rect x="61" y="11" width="40" height="16" rx="8" fill="#E6B780"/>
+  <circle cx="55" cy="48" r="8" fill="#0F5A54"/><path d="m51.5 48 2.7 2.7 5-5.6" stroke="#FFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M71 48h36" stroke="#7EA8A1" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="55" cy="70" r="8" fill="#0F5A54"/><path d="m51.5 70 2.7 2.7 5-5.6" stroke="#FFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M71 70h28" stroke="#7EA8A1" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="55" cy="92" r="8" fill="#E88965"/><path d="m51.5 92 2.7 2.7 5-5.6" stroke="#FFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M71 92h40" stroke="#7EA8A1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M135 57c8-11 23-5 23 6 0 12-12 19-23 27-11-8-23-15-23-27 0-11 15-17 23-6Z" fill="#F3C4AF"/>
+  <path d="M20 28c1.1 4.6 3.8 7.3 8 8.3-4.2 1-6.9 3.7-8 8.3-1.1-4.6-3.8-7.3-8-8.3 4.2-1 6.9-3.7 8-8.3Z" fill="#E88965"/>
+</svg>

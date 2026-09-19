@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="NoevaPet hilft dabei, passende Produkte für das eigene Tier zu finden, Unterschiede einfach zu verstehen und mit einem klaren Einkaufsplan zum Händler weiterzugehen.">
+<meta name="theme-color" content="#FCF8F3">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="stylesheet" href="../assets/styles.css">
+<title>NoevaPet — Meine Tiere</title>
+</head>
+<body class="pets-page v13-pets-page">
+
+<header class="topbar v6-topbar">
+ <div class="shell nav v6-nav">
+  <a class="brand v6-brand v13-brand" href="index.html" aria-label="NoevaPet"><img src="../assets/noevapet-logo-v13.png" alt="NoevaPet — Discover better for their tomorrow" class="brand-logo-v13"></a>
+  <nav class="navlinks v6-navlinks">
+   <a href="index.html" class="">Start</a>
+   <a href="how-it-works.html" class="">So funktioniert’s</a>
+   <a href="pets.html" class="active">Meine Tiere</a>
+   <a href="tool.html" class="">Pet Match</a>
+   <a href="basket.html" class="nav-cart ">
+    <span>Warenkorb</span><span class="nav-cart-count" data-nav-cart-count>0</span>
+   </a>
+  </nav>
+  <div class="nav-actions">
+   <a class="lang" href="../en/pets.html">EN</a>
+   <a class="v6-pet-switch" href="pets.html" title="Tier wechseln">
+    <img data-active-pet-photo src="../assets/owner-upload.png" alt=""><span data-active-pet-name>Milo</span>
+   </a>
+  </div>
+ </div>
+</header>
+<main>
+<section class="shell page-hero" style="padding-bottom:18px">
+ <div class="breadcrumb">Start / Meine Tiere</div><div class="eyebrow" id="pets17Eyebrow">Meine Tiere</div>
+ <h1 id="pets17Title">Tier wechseln, und NoevaPet nimmt den Kontext mit.</h1>
+ <p class="lede" id="pets17Lede">Name, Foto und Profil werden danach in Pet Match, Empfehlungen und Warenkorb verwendet.</p>
+<div class="v13-pets-sketch" aria-hidden="true"><img src="../assets/v13-sketch-dog.svg" alt=""><span>Kleine Profile. Bessere Entscheidungen.</span></div></section>
+<section class="shell pets6-workspace v13-pets-workspace">
+ <article class="card pets6-box" id="pets17SavedBox">
+  <div class="smallcap">Gespeicherte Tiere</div>
+  <h2>Für wen kaufen wir heute ein?</h2>
+  <div class="pets6-cards" id="pets6Cards"></div>
+ </article>
+ <article class="card pets6-box" id="pets17AddBox">
+  <div class="smallcap" id="pets17AddKicker">Tier hinzufügen</div>
+  <h2 id="pets17AddTitle">Nur das, was später hilft.</h2>
+  <form class="pets6-form" id="petForm6">
+   <div class="form-grid">
+    <div class="field"><label>Name</label><input name="name" required placeholder="Maya"></div>
+    <div class="field"><label>Tierart</label><select name="type"><option>Hund</option><option>Katze</option><option>Kleintier</option><option>Vogel</option><option>Sonstiges</option></select></div>
+    <div class="field"><label>Alter</label><input name="age" placeholder="4 Jahre"></div>
+    <div class="field"><label>Kurz beschrieben</label><input name="traits" placeholder="aktiv, ruhig, empfindliche Haut"></div>
+   </div>
+   <div class="field"><label>Was sollten wir wissen?</label><textarea name="notes" placeholder="z. B. mäkelig beim Futter"></textarea></div>
+   <div class="field"><label>Foto</label><div class="upload upload18"><div class="upload18-preview" id="petPhotoPreviewWrap18"><img id="petPhotoPreview6" alt="Vorschau des Tierfotos"><span id="petPhotoPlaceholder18">Foto auswählen</span></div><div class="upload18-controls"><input id="petPhoto6" type="file" accept="image/*"><small>Das Foto wird automatisch für das Profil verkleinert. Das Original bleibt unverändert.</small></div></div></div>
+   <div class="hero-actions"><button class="pill primary" type="submit">Speichern und auswählen →</button></div>
+  </form>
+ </article>
+</section>
+<section class="shell pets9-reassure" id="pets17Reassure">
+ <div><div class="eyebrow">Ein Profil, überall</div><strong>Name, Foto und Tierprofil reisen automatisch mit.</strong></div>
+ <div class="pets9-points"><span>✓ Pet Match</span><span>✓ Empfehlungen</span><span>✓ Warenkorb</span></div>
+</section>
+
+<section class="shell pets18-history" id="purchase-history" hidden><div class="section-head"><div><div class="eyebrow">Einkaufshistorie</div><h2 class="display">Was zuletzt für dein Tier geplant wurde.</h2></div><p>Von dir abgeschlossene Händler-Checkouts werden hier als kompakte Übersicht gespeichert.</p></div><div id="pets18HistoryList" class="pets18-history-list"></div></section>
+
+<div class="v6-modal profile7-modal" id="profile7Modal">
+ <div class="v6-modal-card">
+  <div class="v6-modal-head">
+   <div><h3>Tierprofil</h3><p>Ansehen, bearbeiten oder mit diesem Tier weitermachen.</p></div>
+   <button class="v6-close" type="button" data-profile7-close>×</button>
+  </div>
+  <div class="profile7-hero">
+   <div class="profile7-photo" id="profile7Photo"></div>
+   <div class="profile7-meta"><h3 id="profile7Name"></h3><p id="profile7Meta"></p><div class="tags" id="profile7Tags"></div></div>
+  </div>
+  <div class="profile7-edit-grid">
+   <div><label>Name</label><input id="profile7EditName"></div>
+   <div><label>Alter</label><input id="profile7EditAge"></div>
+   <div><label>Tierart</label><input id="profile7EditType"></div>
+   <div><label>Tags</label><input id="profile7EditTags" placeholder="aktiv, ruhig"></div>
+   <div class="wide"><label>Was sollten wir wissen?</label><textarea id="profile7EditNotes"></textarea></div>
+  </div>
+  <div class="v6-panel-actions">
+   <button class="pill soft" type="button" data-profile7-close>Schließen</button>
+   <button class="pill" type="button" id="profile7Save">Änderungen speichern</button>
+   <button class="pill primary" type="button" id="profile7Continue">Mit diesem Tier weiter →</button>
+  </div>
+ </div>
+</div>
+
+</main><footer class="footer v7-footer">
+ <div class="shell footer-grid">
+  <div class="v7-footer-brand">
+   <div class="v7-footer-lockup v13-footer-lockup"><img src="../assets/noevapet-logo-v13.png" alt="NoevaPet — Discover better for their tomorrow"></div>
+   <p>NoevaPet hilft dabei, passende Produkte für das eigene Tier zu finden, Unterschiede einfach zu verstehen und mit einem klaren Einkaufsplan zum Händler weiterzugehen.</p>
+   <p class="v7-footer-disclosure">NoevaPet kann bei vermittelten Käufen eine Provision erhalten. Sie verändert weder deinen Preis noch die Reihenfolge der Empfehlungen. <a href="how-we-make-money.html">Mehr zur Transparenz</a></p>
+  </div>
+  <div><h4>Entdecken</h4><a href="tool.html">Pet Match</a><a href="explore.html">Bereiche entdecken</a><a href="how-it-works.html">So funktioniert’s</a><a href="basket.html">Warenkorb</a><a href="pets.html">Meine Tiere</a></div>
+  <div><h4>NoevaPet</h4><a href="about.html">Über NoevaPet</a><a href="faq.html">FAQ</a><a href="contact.html">Kontakt</a></div>
+  <div><h4>Rechtliches</h4><a href="privacy.html">Datenschutz</a><a href="imprint.html">Impressum</a><a href="terms.html">Nutzungsbedingungen</a><a href="cookies.html">Cookies</a></div>
+ </div>
+</footer>
+
+<div id="cookieBanner" class="cookie-banner">
+ <p><strong>Cookies.</strong> Diese Vorab-Version nutzt lokalen Speicher nur für die derzeitigen Funktionen. Vor dem öffentlichen Start wird die endgültige Einwilligungslogik angebunden.</p>
+ <div style="display:flex;gap:8px">
+   <button class="pill soft" data-cookie="essential">Nur notwendige</button>
+   <button class="pill primary" data-cookie="all">Akzeptieren</button>
+ </div>
+</div>
+
+<script src="../assets/runtime-config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

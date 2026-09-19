@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "product": {
+    "required": [
+      "id",
+      "name",
+      "brand",
+      "category",
+      "market",
+      "currency"
+    ],
+    "optional": [
+      "gtin",
+      "image",
+      "pack_size",
+      "attributes",
+      "evidence",
+      "freshness"
+    ]
+  },
+  "offer": {
+    "required": [
+      "product_id",
+      "retailer_id",
+      "price",
+      "currency",
+      "availability",
+      "url"
+    ],
+    "optional": [
+      "shipping_cost",
+      "delivery_window",
+      "affiliate_url",
+      "checked_at"
+    ]
+  }
+}

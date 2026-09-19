@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "request": {
+    "required": [
+      "pet_profile",
+      "need",
+      "market"
+    ],
+    "optional": [
+      "current_routine",
+      "preference_mode",
+      "excluded_attributes"
+    ]
+  },
+  "response": {
+    "required": [
+      "lead",
+      "alternatives",
+      "reasoning",
+      "retailer_plan"
+    ],
+    "lead": [
+      "product_id",
+      "fit_score",
+      "reason_codes"
+    ],
+    "retailer_plan": [
+      "mode",
+      "retailers",
+      "total_cost",
+      "handoff"
+    ]
+  },
+  "current_routine_item": {
+    "required": [
+      "name",
+      "type",
+      "locked"
+    ],
+    "optional": [
+      "brand",
+      "gtin",
+      "pack_size",
+      "monthly_quantity",
+      "current_price"
+    ],
+    "semantics": {
+      "locked_true": "Do not recommend a substitute unless the user explicitly unlocks it. Optimise retailer/pack/price around the same product where possible.",
+      "locked_false": "Item is part of current routine but may be compared with alternatives."
+    }
+  },
+  "preference_modes": [
+    "lower_total",
+    "best_balance",
+    "simplest_purchase",
+    "keep_usual_products"
+  ]
+}
