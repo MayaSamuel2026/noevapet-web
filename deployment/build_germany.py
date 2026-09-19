@@ -8,6 +8,7 @@ from pathlib import Path
 
 src = Path(sys.argv[1]).resolve()
 out = Path(sys.argv[2]).resolve()
+deployment_dir = Path(__file__).resolve().parent
 
 if out.exists():
     shutil.rmtree(out)
@@ -250,8 +251,8 @@ for page in sorted((src / 'de').glob('*.html')):
     '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.5.0","mode":"native-core-module","data_bound":true,"capabilities":["health","catalog","offers","recommend","exact-product","contact","retailer-handoff","consent-event","affiliate-event"],"affiliate_activation":false,"analytics_activation":false}\\n',
     encoding='utf-8',
 )
-shutil.copy2(src.parent / 'deployment' / 'noeva_core_binding.js', out / 'assets' / 'noeva-core-binding.js')
-shutil.copy2(src.parent / 'deployment' / 'noevapet_real_core_v1.js', out / 'assets' / 'noevapet-real-core-v1.js')
+shutil.copy2(deployment_dir / 'noeva_core_binding.js', out / 'assets' / 'noeva-core-binding.js')
+shutil.copy2(deployment_dir / 'noevapet_real_core_v1.js', out / 'assets' / 'noevapet-real-core-v1.js')
 for built_page in out.glob('*.html'):
     html = built_page.read_text(encoding='utf-8')
     inject = '<script src="assets/noeva-core-binding.js" defer></script>\\n<script src="assets/noevapet-real-core-v1.js" defer></script>\\n'
