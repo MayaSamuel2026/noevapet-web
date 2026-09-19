@@ -13,7 +13,7 @@ required = [
     'assets/styles.css', 'assets/app.js', 'assets/runtime-config.js',
     'assets/noeva-core-binding.js', 'assets/noevapet-real-core-v1.js',
     '.well-known/noeva-core-binding.json',
-    'robots.txt', 'VERSION.txt', 'MARKET.txt', '.htaccess'
+    'robots.txt', 'VERSION.txt', 'MARKET.txt', 'LAUNCH_BLOCKERS.txt', '.htaccess'
 ]
 missing = [p for p in required if not (root / p).exists()]
 if missing:
@@ -115,6 +115,15 @@ bridge = (root / 'assets/noevapet-real-core-v1.js').read_text(encoding='utf-8', 
 for marker in ('npNoevaPetRealCoreV1', 'exactProduct', 'recommend', 'consentEvent', 'retailerHandoff', 'affiliateRankingInfluence:false'):
     if marker not in bridge:
         raise SystemExit(f'NoevaPet REAL CORE bridge sentinel missing: {marker}')
+
+blockers = (root / 'LAUNCH_BLOCKERS.txt').read_text(encoding='utf-8', errors='strict')
+for marker in (
+    'status=BLOCKED_UNTIL_EXTERNAL_FACTS_COMPLETE',
+    'affiliate_network_activation=DISABLED_UNTIL_PARTNER_CREDENTIALS',
+    'robots=NOINDEX_NOFOLLOW',
+):
+    if marker not in blockers:
+        raise SystemExit(f'NoevaPet launch-blocker gate incomplete: {marker}')
 
 binding = (root / '.well-known/noeva-core-binding.json').read_text(encoding='utf-8', errors='strict')
 for marker in ('"core_version":"1.5.0"', '"mode":"native-core-module"', '"data_bound":true', '"affiliate_activation":false'):
