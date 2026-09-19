@@ -10,7 +10,10 @@ root = Path(sys.argv[1]).resolve()
 required = [
     'index.html', 'tool.html', 'basket.html', 'pets.html', 'how-it-works.html',
     'faq.html', 'contact.html', 'privacy.html', 'imprint.html', 'terms.html', 'cookies.html',
-    'assets/styles.css', 'assets/app.js', 'robots.txt', 'VERSION.txt', 'MARKET.txt', '.htaccess'
+    'assets/styles.css', 'assets/app.js', 'assets/runtime-config.js',
+    'assets/noeva-core-binding.js', 'assets/noevapet-real-core-v1.js',
+    '.well-known/noeva-core-binding.json',
+    'robots.txt', 'VERSION.txt', 'MARKET.txt', 'LAUNCH_BLOCKERS.txt', '.htaccess'
 ]
 missing = [p for p in required if not (root / p).exists()]
 if missing:
@@ -86,6 +89,47 @@ if 'npGermanyFreshPetState' not in app:
 if "localStorage.setItem('npPets','[]')" not in app:
     raise SystemExit('Germany production does not initialize empty pet state')
 
+# REAL CORE production binding must be explicit, credential-free and fail closed.
+runtime = (root / 'assets/runtime-config.js').read_text(encoding='utf-8', errors='strict')
+if 'mode:"production"' not in runtime:
+    raise SystemExit('Germany runtime config is not in production mode')
+for marker in (
+    '/api/public/v1/noevapet/catalog',
+    '/api/public/v1/noevapet/recommend',
+    '/api/public/v1/noevapet/exact-product',
+    '/api/public/v1/noevapet/contact',
+    '/api/public/v1/noevapet/retailer-handoff',
+    '/api/public/v1/noevapet/consent-event',
+):
+    if marker not in runtime:
+        raise SystemExit(f'NoevaPet REAL CORE endpoint missing from runtime config: {marker}')
+for forbidden in ('NOEVA_CORE_INTERNAL_TOKEN', 'NOEVA_CORE_API_KEY', 'Bearer ', 'password=', 'secret='):
+    if forbidden in runtime:
+        raise SystemExit(f'Germany runtime config leaks a protected credential marker: {forbidden}')
+if 'analytics:{enabled:false' not in runtime:
+    raise SystemExit('Analytics must remain disabled until an explicit provider/consent launch gate exists')
+if 'affiliate:{enabled:false' not in runtime or 'rankingInfluence:false' not in runtime:
+    raise SystemExit('Affiliate activation/ranking independence guard missing')
+
+bridge = (root / 'assets/noevapet-real-core-v1.js').read_text(encoding='utf-8', errors='strict')
+for marker in ('npNoevaPetRealCoreV1', 'exactProduct', 'recommend', 'consentEvent', 'retailerHandoff', 'affiliateRankingInfluence:false'):
+    if marker not in bridge:
+        raise SystemExit(f'NoevaPet REAL CORE bridge sentinel missing: {marker}')
+
+blockers = (root / 'LAUNCH_BLOCKERS.txt').read_text(encoding='utf-8', errors='strict')
+for marker in (
+    'status=BLOCKED_UNTIL_EXTERNAL_FACTS_COMPLETE',
+    'affiliate_network_activation=DISABLED_UNTIL_PARTNER_CREDENTIALS',
+    'robots=NOINDEX_NOFOLLOW',
+):
+    if marker not in blockers:
+        raise SystemExit(f'NoevaPet launch-blocker gate incomplete: {marker}')
+
+binding = (root / '.well-known/noeva-core-binding.json').read_text(encoding='utf-8', errors='strict')
+for marker in ('"core_version":"1.5.0"', '"mode":"native-core-module"', '"data_bound":true', '"affiliate_activation":false'):
+    if marker not in binding:
+        raise SystemExit(f'NoevaPet binding contract incomplete: {marker}')
+
 index = (root / 'index.html').read_text(encoding='utf-8', errors='strict')
 if 'class="hero6-basket hero8-basket" hidden' not in index:
     raise SystemExit('Germany homepage basket must be hidden until a pet is present')
@@ -110,4 +154,4 @@ if 'Disallow: /' not in robots:
 if (root / 'MARKET.txt').read_text(encoding='utf-8').strip() != 'DE':
     raise SystemExit('MARKET.txt must be DE')
 
-print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; German-only; root-flattened; canonicals correct; crawl lock intact; fresh-user state empty; pet-route guards active; canonical host enforced')
+print(f'GERMANY QUALIFIED: {len(html_files)} HTML pages; V26 frozen UX intact; REAL CORE v1.0 data binding present; analytics/affiliate activation fail-closed; German-only; canonicals correct; crawl lock intact; pet-route guards active')

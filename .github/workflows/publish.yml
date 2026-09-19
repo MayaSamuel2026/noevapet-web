@@ -116,6 +116,9 @@ jobs:
           set -euo pipefail
           DE_DEPLOY="$(cat "$RUNNER_TEMP/de_deploy_path")"
           node --check "$DE_DEPLOY/assets/app.js"
+          node --check "$DE_DEPLOY/assets/runtime-config.js"
+          node --check "$DE_DEPLOY/assets/noeva-core-binding.js"
+          node --check "$DE_DEPLOY/assets/noevapet-real-core-v1.js"
           python3 deployment/qualify_germany.py "$DE_DEPLOY"
 
       - name: Strip source-only QA and release controls
