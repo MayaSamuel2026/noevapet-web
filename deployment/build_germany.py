@@ -68,6 +68,29 @@ fresh_guard = r"""
   }
 })();
 """
+# Production runtime configuration contains only public endpoints and no credentials.
+runtime_config = r"""// NoevaPet Germany production runtime — public bindings only.
+window.NOEVA_RUNTIME={
+ mode:"production",
+ endpoints:{
+  catalog:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/catalog",
+  recommend:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/recommend",
+  exactProduct:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/exact-product",
+  contact:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/contact",
+  profile:null,
+  retailerHandoff:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/retailer-handoff",
+  affiliateEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/affiliate-event",
+  consentEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/consent-event"
+ },
+ analytics:{enabled:false,provider:null,measurementId:null},
+ affiliate:{enabled:false,network:null,partnerId:null,rankingInfluence:false},
+ retailers:{},
+ auth:{enabled:false,provider:null,persistence:"device-local"},
+ legal:{operator:"NOEVA Systems e.K.",registerCourt:null,registrationNumber:null,vatId:null}
+};
+"""
+(out / 'assets' / 'runtime-config.js').write_text(runtime_config, encoding='utf-8')
+
 app.write_text(fresh_guard + app_text, encoding='utf-8')
 
 # Direct Pet Match / cart URLs require a real saved pet. This runs before the
@@ -112,6 +135,24 @@ for page in sorted((src / 'de').glob('*.html')):
     # Defensive cleanup: the DE production build must not expose English-market links.
     text = re.sub(r'<link\b[^>]*hreflang=["\'][^"\']*["\'][^>]*>', '', text, flags=re.I)
 
+    # Final live-service copy: consent is bound to CORE; analytics remains off.
+    text = text.replace(
+        'Diese Vorab-Version nutzt lokalen Speicher nur für die derzeitigen Funktionen. Vor dem öffentlichen Start wird die endgültige Einwilligungslogik angebunden.',
+        'Notwendige lokale Speicherung hält deine Tier- und Warenkorbwahl auf diesem Gerät. Optionale Dienste werden erst nach deiner Einwilligung aktiviert.'
+    )
+    text = text.replace(
+        'Danke. In dieser Vorschau wird noch nichts versendet; der Live-Endpunkt wird vor dem öffentlichen Start angebunden.',
+        'Danke. Deine Nachricht wird sicher an NoevaPet übermittelt.'
+    )
+    text = text.replace(
+        'Für allgemeine Anfragen wird vor dem öffentlichen Start eine zentrale Kontaktadresse aktiviert.',
+        'Für allgemeine Anfragen erreichst du NoevaPet über das Kontaktformular.'
+    )
+    text = text.replace(
+        '<div class="notice">Kontaktadresse folgt zum öffentlichen Start.</div>',
+        '<div class="notice">Betreiber: NOEVA Systems e.K. · info@noevasystems.com</div>'
+    )
+
     (out / page.name).write_text(text, encoding='utf-8')
 
 # Canonical host + HTTPS. Hostinger shared hosting/LiteSpeed honors .htaccess.
@@ -125,21 +166,22 @@ for page in sorted((src / 'de').glob('*.html')):
 
 # Pre-launch crawl lock at server level as well as meta robots.
 (out / 'robots.txt').write_text('User-agent: *\nDisallow: /\n', encoding='utf-8')
-(out / 'VERSION.txt').write_text('NoevaPet V26 — Germany pre-launch production shell\n', encoding='utf-8')
+(out / 'VERSION.txt').write_text('NoevaPet V26 + REAL CORE v1.0 — Germany production candidate\n', encoding='utf-8')
 (out / 'MARKET.txt').write_text('DE\n', encoding='utf-8')
 
-# NOEVA CORE OS v1.3 binding capability. This publishes the binding contract
-# and SDK but performs no automatic tracking; customer flows opt in explicitly.
+# NOEVAPET REAL CORE v1.0 capability contract and integration bridge.
 (out / '.well-known').mkdir(parents=True, exist_ok=True)
 (out / '.well-known' / 'noeva-core-binding.json').write_text(
-    '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.3.0","mode":"registered-surface","data_bound":false,"capabilities":["health"]}\\n',
+    '{"schema":"noeva-core-binding/v1","vertical_id":"noevapet","core_origin":"https://noeva-core.179-198-203-247.nip.io","core_version":"1.5.0","mode":"native-core-module","data_bound":true,"capabilities":["health","catalog","offers","recommend","exact-product","contact","retailer-handoff","consent-event","affiliate-event"],"affiliate_activation":false,"analytics_activation":false}\\n',
     encoding='utf-8',
 )
 shutil.copy2(src.parent / 'deployment' / 'noeva_core_binding.js', out / 'assets' / 'noeva-core-binding.js')
+shutil.copy2(src.parent / 'deployment' / 'noevapet_real_core_v1.js', out / 'assets' / 'noevapet-real-core-v1.js')
 for built_page in out.glob('*.html'):
     html = built_page.read_text(encoding='utf-8')
-    if 'assets/noeva-core-binding.js' not in html:
-        html = html.replace('</head>', '<script src="assets/noeva-core-binding.js" defer></script>\\n</head>', 1)
+    inject = '<script src="assets/noeva-core-binding.js" defer></script>\\n<script src="assets/noevapet-real-core-v1.js" defer></script>\\n'
+    if 'assets/noevapet-real-core-v1.js' not in html:
+        html = html.replace('</head>', inject + '</head>', 1)
         built_page.write_text(html, encoding='utf-8')
 
 # German 404 without introducing a second language or a duplicate application shell.
