@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-hidden="true">
+<defs><filter id="s" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#243f40" flood-opacity=".14"/></filter></defs>
+<ellipse cx="80" cy="137" rx="47" ry="9" fill="#123f40" opacity=".08"/>
+<g filter="url(#s)">
+<path d="M51 41h58l6 82H45z" fill="#F7E5DA" stroke="#0F5A54" stroke-width="3"/><path d="M55 35h50l4 15H51z" fill="#0F5A54"/><circle cx="80" cy="86" r="23" fill="#FFFDF9"/><path d="M60 88c7-12 13-15 20-9 8-7 15-3 21 9-7 14-34 14-41 0Z" fill="#C88C57"/><circle cx="96" cy="50" r="5" fill="#F18A69"/></g></svg>
