@@ -15,5 +15,5 @@ window.NOEVA_RUNTIME={
  affiliate:{enabled:false,network:null,partnerId:null,rankingInfluence:false},
  retailers:{},
  auth:{enabled:false,provider:null,persistence:"device-local"},
- legal:{operator:"NOEVA Systems e.K.",registerCourt:null,registrationNumber:null,vatId:null}
+ legal:{operator:"Frederick Samuel / NOEVA Systems",businessForm:"Einzelunternehmen",commercialRegisterStatus:"NOT_YET_REGISTERED",registerCourt:null,registrationNumber:null,vatId:null,contact:"info@noevasystems.com"}
 };
