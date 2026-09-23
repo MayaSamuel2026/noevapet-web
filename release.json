@@ -1,0 +1,14 @@
+{
+  "schema": "noevapet-release/1",
+  "release_id": "NOEVAPET_V26_REAL_CORE_P1_20260923",
+  "vertical": "NoevaPet",
+  "market": "DE",
+  "website_version": "V26",
+  "runtime_stack": "STATIC_HOSTING",
+  "core_contract": "noevapet-real-core/1.0",
+  "launch_guard": "PUBLIC_INDEXABLE",
+  "indexing": "PUBLIC",
+  "website_gate": "PASS_CANDIDATE",
+  "source_branch": "p1-noevapet-launch-final-20260923",
+  "rollback_branch": "rollback-noevapet-de-pre-p1-20260923"
+}
