@@ -8,7 +8,7 @@
   "core_contract": "noevapet-real-core/1.0",
   "launch_guard": "PUBLIC_INDEXABLE",
   "indexing": "PUBLIC",
-  "website_gate": "PASS_P4_CANDIDATE",
+  "website_gate": "PASS",
   "source_branch": "p4/noevapet-revenue-loop-20260924",
   "rollback_branch": "rollback-noevapet-production-20260924",
   "revenue_loop": {
@@ -18,5 +18,11 @@
     "consent_gated_analytics": true,
     "core_handoff_attribution": true,
     "affiliate_network_activation": false
+  },
+  "live_gate_checked_at": "2026-09-24T21:00:18Z",
+  "release_freeze": "FROZEN_WITH_GSC_PENDING",
+  "search_console": {
+    "state": "PENDING_CREDENTIALS",
+    "measurement_ready": false
   }
 }
