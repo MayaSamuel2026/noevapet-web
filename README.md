@@ -4,7 +4,7 @@ Customer-facing NoevaPet website for Germany.
 
 ## Current release authority
 
-The live release authority is the `production` branch.
+The qualified release authority is the `production` branch. The Hostinger German deployment integration follows `production-de`, which must mirror the qualified `production` release before live acceptance.
 
 - Website: **NoevaPet V26 + REAL CORE v1.0**
 - Runtime: static hosting
@@ -23,10 +23,12 @@ public acquisition surface.
 
 Future releases must preserve the current production authority and use:
 
-`qualified candidate -> Website Gate -> explicit production promotion -> live acceptance -> rollback on failure`
+`qualified candidate -> explicit production promotion -> production-de deployment mirror -> live Website Gate acceptance -> freeze / rollback on failure`
 
 Do not restore the legacy pre-launch publisher or re-close indexing as part of
-routine development.
+routine development. A release is not live merely because `production` advanced;
+`production-de` and the live `release.json` marker must match before the Website
+Gate can pass.
 
 ## Operator
 
