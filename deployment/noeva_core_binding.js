@@ -33,7 +33,7 @@
       decision:true,
       commercial:true,
       profile:false,
-      analytics:false,
+      analytics:true,
       affiliateActivation:false
     }),
     health:()=>request('/api/public/v1/binding/health?vertical_id='+VERTICAL),
@@ -46,7 +46,8 @@
       contact:(payload)=>post('/api/public/v1/noevapet/contact',payload),
       retailerHandoff:(payload)=>post('/api/public/v1/noevapet/retailer-handoff',payload),
       affiliateEvent:(payload)=>post('/api/public/v1/noevapet/affiliate-event',payload),
-      consentEvent:(payload)=>post('/api/public/v1/noevapet/consent-event',payload)
+      consentEvent:(payload)=>post('/api/public/v1/noevapet/consent-event',payload),
+      revenueEvent:(payload)=>post('/api/public/v1/revenue/event',payload)
     })
   };
 })();

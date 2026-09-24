@@ -81,10 +81,11 @@ window.NOEVA_RUNTIME={
   profile:null,
   retailerHandoff:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/retailer-handoff",
   affiliateEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/affiliate-event",
-  consentEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/consent-event"
+  consentEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/noevapet/consent-event",
+  revenueEvent:"https://noeva-core.179-198-203-247.nip.io/api/public/v1/revenue/event"
  },
- analytics:{enabled:false,provider:null,measurementId:null},
- affiliate:{enabled:false,network:null,partnerId:null,rankingInfluence:false},
+ analytics:{enabled:true,provider:"NOEVA_CORE_REVENUE_LOOP",siteId:"noevapet.de",consentRequired:true,measurementId:null},
+ affiliate:{enabled:false,network:null,partnerId:null,rankingInfluence:false,attribution:"NOEVA_CORE_EVENT_ID",handoff:"CORE_RETAILER_HANDOFF"},
  retailers:{},
  auth:{enabled:false,provider:null,persistence:"device-local"},
  legal:{operator:"NOEVA Systems e.K.",registerCourt:null,registrationNumber:null,vatId:null}
@@ -255,7 +256,7 @@ shutil.copy2(deployment_dir / 'noeva_core_binding.js', out / 'assets' / 'noeva-c
 shutil.copy2(deployment_dir / 'noevapet_real_core_v1.js', out / 'assets' / 'noevapet-real-core-v1.js')
 for built_page in out.glob('*.html'):
     html = built_page.read_text(encoding='utf-8')
-    inject = '<script src="assets/noeva-core-binding.js" defer></script>\\n<script src="assets/noevapet-real-core-v1.js" defer></script>\\n'
+    inject = '<script src="assets/noeva-core-binding.js" defer></script>\n<script src="assets/noevapet-real-core-v1.js" defer></script>\n'
     if 'assets/noevapet-real-core-v1.js' not in html:
         html = html.replace('</head>', inject + '</head>', 1)
         built_page.write_text(html, encoding='utf-8')
