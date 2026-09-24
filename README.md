@@ -6,10 +6,12 @@ Customer-facing NoevaPet website for Germany.
 
 The qualified release authority is the `production` branch. The Hostinger German deployment integration follows `production-de`, which must mirror the qualified `production` release before live acceptance.
 
-- Website: **NoevaPet V26 + REAL CORE v1.0**
+- Website: **NoevaPet V27 / V26 UX + REAL CORE v1.0 + Revenue Loop**
 - Runtime: static hosting
 - CORE binding: native NoevaPet REAL CORE v1
 - Public indexing: enabled
+- Website Gate: **PASS**
+- Revenue Loop: active CORE event attribution; Search Console measurement pending credentials
 - Sitemap: `https://noevapet.de/sitemap.xml`
 - Launch receipt: `P1_LAUNCH_RECEIPT.json`
 - WordPress dependency: none
