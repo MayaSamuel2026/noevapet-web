@@ -1,14 +1,22 @@
 {
   "schema": "noevapet-release/1",
-  "release_id": "NOEVAPET_V26_REAL_CORE_P1_20260923",
+  "release_id": "NOEVAPET_V27_REVENUE_LOOP_P4_20260924",
   "vertical": "NoevaPet",
   "market": "DE",
-  "website_version": "V26",
+  "website_version": "V27 / V26 UX + REAL CORE v1.0 + Revenue Loop",
   "runtime_stack": "STATIC_HOSTING",
   "core_contract": "noevapet-real-core/1.0",
   "launch_guard": "PUBLIC_INDEXABLE",
   "indexing": "PUBLIC",
-  "website_gate": "PASS_CANDIDATE",
-  "source_branch": "p1-noevapet-launch-final-20260923",
-  "rollback_branch": "rollback-noevapet-de-pre-p1-20260923"
+  "website_gate": "PASS_P4_CANDIDATE",
+  "source_branch": "p4/noevapet-revenue-loop-20260924",
+  "rollback_branch": "rollback-noevapet-production-20260924",
+  "revenue_loop": {
+    "provider": "NOEVA_CORE_REVENUE_LOOP",
+    "site_id": "noevapet.de",
+    "commercial_mode": "BOTH",
+    "consent_gated_analytics": true,
+    "core_handoff_attribution": true,
+    "affiliate_network_activation": false
+  }
 }
