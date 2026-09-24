@@ -15,4 +15,6 @@ wpvibe_dependency=NONE
 robots=INDEX_FOLLOW
 sitemap=PUBLIC
 revenue_loop_site=noevapet.de
-revenue_loop_gate=P4_CANDIDATE
+revenue_loop_gate=PASS_WITH_GSC_PENDING
+search_console_state=PENDING_CREDENTIALS
+measurement_ready=PENDING_GSC
