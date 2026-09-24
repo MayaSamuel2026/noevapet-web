@@ -2,8 +2,8 @@
   "schema": "noeva-launch-receipt/1",
   "product": "NoevaPet",
   "market": "DE",
-  "website_version": "V26 + REAL CORE v1.0",
-  "release_source": "p1-noevapet-launch-final-20260923",
+  "website_version": "V27 / V26 UX + REAL CORE v1.0 + Revenue Loop",
+  "release_source": "p4/noevapet-revenue-loop-20260924",
   "promoted_at": "2026-09-24",
   "website_gate": "PASS",
   "indexing": "PUBLIC",
@@ -22,9 +22,12 @@
   "acquisition": {
     "robots": "ALLOW",
     "sitemap": "PRESENT",
-    "analytics_activation": false,
+    "analytics_activation": true,
     "affiliate_network_activation": false,
-    "note": "Analytics and affiliate activation are post-launch revenue-loop steps and are not launch blockers."
+    "note": "CORE revenue measurement and retailer-handoff attribution are enabled. External affiliate-network tracking remains disabled until verified partner acceptance and credentials exist.",
+    "analytics_provider": "NOEVA_CORE_REVENUE_LOOP",
+    "analytics_consent_required": true,
+    "core_retailer_attribution": true
   },
-  "next_state": "LIVE_ACQUISITION_SURFACE"
+  "next_state": "P4_REVENUE_LOOP_QUALIFICATION"
 }
