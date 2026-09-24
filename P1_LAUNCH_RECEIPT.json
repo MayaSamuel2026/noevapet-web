@@ -1,0 +1,30 @@
+{
+  "schema": "noeva-launch-receipt/1",
+  "product": "NoevaPet",
+  "market": "DE",
+  "website_version": "V26 + REAL CORE v1.0",
+  "release_source": "p1-noevapet-launch-final-20260923",
+  "promoted_at": "2026-09-24",
+  "website_gate": "PASS",
+  "indexing": "PUBLIC",
+  "runtime_stack": "STATIC_HOSTING",
+  "wordpress_dependency": false,
+  "wpvibe_dependency": false,
+  "core_binding": "REAL_CORE_V1_LIVE",
+  "operator": {
+    "legal_person": "Frederick Samuel",
+    "business_designation": "NOEVA Systems",
+    "business_form": "Einzelunternehmen",
+    "address": "Marienburger Straße 16, 56112 Lahnstein, Germany",
+    "contact_email": "info@noevasystems.com",
+    "commercial_register_status": "NOT_YET_REGISTERED"
+  },
+  "acquisition": {
+    "robots": "ALLOW",
+    "sitemap": "PRESENT",
+    "analytics_activation": false,
+    "affiliate_network_activation": false,
+    "note": "Analytics and affiliate activation are post-launch revenue-loop steps and are not launch blockers."
+  },
+  "next_state": "LIVE_ACQUISITION_SURFACE"
+}
