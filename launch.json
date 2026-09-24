@@ -2,9 +2,9 @@
   "schema": "noevapet-launch/1",
   "vertical": "NoevaPet",
   "market": "DE",
-  "website_version": "V26",
+  "website_version": "V27 / V26 UX + REAL CORE v1.0 + Revenue Loop",
   "core_contract": "noevapet-real-core/1.0",
-  "website_gate": "PASS_CANDIDATE",
+  "website_gate": "PASS_P4_CANDIDATE",
   "indexing": "PUBLIC",
   "runtime_stack": "STATIC_HOSTING",
   "core_authority": "NOEVA_CORE_OS",
@@ -20,10 +20,15 @@
     "affiliate_tracking_enabled": false,
     "affiliate_ranking_influence": false,
     "direct_retailer_handoff": true,
+    "core_handoff_attribution": true,
+    "attribution_mode": "CORE_EVENT_ID",
     "activation_after_website_gate": true
   },
   "analytics": {
-    "enabled": false,
+    "enabled": true,
+    "provider": "NOEVA_CORE_REVENUE_LOOP",
+    "site_id": "noevapet.de",
+    "consent_required": true,
     "launch_blocking": false
   },
   "qualification": {
@@ -36,5 +41,5 @@
     "crawler_status": "RUNNING",
     "checked_at": "2026-09-23T16:27:02Z"
   },
-  "rollback_branch": "rollback-noevapet-de-pre-p1-20260923"
+  "rollback_branch": "rollback-noevapet-production-20260924"
 }
