@@ -27,7 +27,12 @@
     "note": "CORE revenue measurement and retailer-handoff attribution are enabled. External affiliate-network tracking remains disabled until verified partner acceptance and credentials exist.",
     "analytics_provider": "NOEVA_CORE_REVENUE_LOOP",
     "analytics_consent_required": true,
-    "core_retailer_attribution": true
+    "core_retailer_attribution": true,
+    "search_console_state": "PENDING_CREDENTIALS",
+    "measurement_ready": false,
+    "live_commercial_click_gate": true
   },
-  "next_state": "P4_REVENUE_LOOP_QUALIFICATION"
+  "next_state": "LIVE_ACQUISITION_SURFACE_GSC_PENDING",
+  "live_gate_checked_at": "2026-09-24T21:00:18Z",
+  "release_freeze": "FROZEN_WITH_GSC_PENDING"
 }
