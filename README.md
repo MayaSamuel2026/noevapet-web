@@ -1,20 +1,40 @@
 # NoevaPet Web
 
-Customer-facing NoevaPet website for Germany (DE/EN).
+Customer-facing NoevaPet website for Germany.
 
-## Release model
+## Current release authority
 
-This repository follows NOEVA Deployment Standard v1:
+The live release authority is the `production` branch.
 
-`main` → GitHub Actions qualification → clean `production` branch → Hostinger Git deployment.
+- Website: **NoevaPet V26 + REAL CORE v1.0**
+- Runtime: static hosting
+- CORE binding: native NoevaPet REAL CORE v1
+- Public indexing: enabled
+- Sitemap: `https://noevapet.de/sitemap.xml`
+- Launch receipt: `P1_LAUNCH_RECEIPT.json`
+- WordPress dependency: none
+- WPVibe dependency: none
 
-- `main` contains the release source and QA/deployment automation.
-- `production` is generated automatically and contains only the deployable static website.
-- Hostinger must deploy the `production` branch into the domain document root.
-- Production remains `noindex,nofollow` until the commercial core, legal details, consent/analytics and retailer bindings are launch-ready.
+The previous automatic `main -> production` publisher is retired because it
+rebuilt the old pre-launch `noindex,nofollow` shell and could overwrite the
+public acquisition surface.
 
-## Approved baseline
+## Release rule
 
-Approved pre-deployment UI baseline: **NoevaPet V26** (`NoevaPet_PreDeployment_V26.zip`).
+Future releases must preserve the current production authority and use:
 
-Do not replace the approved V26 payload with an older build. V26 retains V25 logic/QA and adds the final readability pass plus the pet identity treatment in purchase confirmation.
+`qualified candidate -> Website Gate -> explicit production promotion -> live acceptance -> rollback on failure`
+
+Do not restore the legacy pre-launch publisher or re-close indexing as part of
+routine development.
+
+## Operator
+
+NoevaPet is currently operated by Frederick Samuel under the business
+designation NOEVA Systems, Marienburger Straße 16, 56112 Lahnstein, Germany.
+
+Current contact: `info@noevasystems.com`.
+
+The public legal pages reflect the present sole-trader status. Registered
+company details should only be added after the corresponding register facts
+exist and have been verified.
