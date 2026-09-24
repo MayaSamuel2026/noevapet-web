@@ -39,6 +39,50 @@
     }
   }
 
+  function analyticsAllowed(){
+    try{return localStorage.getItem('npCookieChoice')==='all'}catch(e){return false}
+  }
+  function sessionId(){
+    try{
+      let id=sessionStorage.getItem('npRevenueSession');
+      if(!id){
+        id='np-s-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+        sessionStorage.setItem('npRevenueSession',id);
+      }
+      return id;
+    }catch(e){return 'np-s-'+Date.now().toString(36)}
+  }
+  let revenueSeq=0;
+  function revenueEvent(type,{subjectKey=null,metadata={}}={}){
+    if(!analyticsAllowed()||!RC()||typeof RC().revenueEvent!=='function')return Promise.resolve(null);
+    revenueSeq+=1;
+    const sid=sessionId();
+    const eventId=(sid+':'+String(type||'event').toLowerCase()+':'+revenueSeq).replace(/[^A-Za-z0-9:_./-]/g,'-').slice(0,160);
+    const payload={
+      event_id:eventId,
+      event_type:type,
+      vertical:'noevapet',
+      site_id:'noevapet.de',
+      page_url:location.href,
+      referrer:document.referrer||null,
+      occurred_at:new Date().toISOString(),
+      metadata:{session_id:sid,...metadata}
+    };
+    if(subjectKey&&/^[A-Za-z0-9:_./-]{1,160}$/.test(String(subjectKey)))payload.subject_key=String(subjectKey);
+    return RC().revenueEvent(payload).catch(()=>null);
+  }
+  function recordLandingMeasurement(){
+    if(!analyticsAllowed())return;
+    try{
+      if(sessionStorage.getItem('npRevenueLandingRecorded')==='1')return;
+      sessionStorage.setItem('npRevenueLandingRecorded','1');
+    }catch(e){}
+    revenueEvent('SITE_SESSION',{metadata:{market:'DE',language:document.documentElement.lang||'de'}});
+    const ref=String(document.referrer||'').toLowerCase();
+    const organic=/google\.|bing\.|duckduckgo\.|ecosia\.|yahoo\.|yandex\./.test(ref);
+    if(organic)revenueEvent('ORGANIC_LANDING',{metadata:{market:'DE'}});
+  }
+
   async function hydrateExactProducts(){
     if(!RC()||typeof getRoutineV6!=='function'||typeof saveRoutineV6!=='function')return;
     const current=getRoutineV6();
@@ -112,6 +156,10 @@
           realCoreObservedAt:offer&&offer.observed_at||row.offers_observed_at||null
         });
         savePlanV6(plan);renderAll();
+        revenueEvent('RECOMMENDATION_SHOWN',{
+          subjectKey:row.canonical_product_id||null,
+          metadata:{market:'DE',category:rule.category,need:rule.label,offer_available:!!offer}
+        });
       }).catch(()=>{});
     };
   }
@@ -163,25 +211,34 @@
     openRetailerV8=function(id){
       try{
         const group=typeof purchaseRouteGroupsV19==='function'?purchaseRouteGroupsV19().find(x=>x.id===id):null;
-        if(group&&RC())RC().retailerHandoff({
-          market:'DE',
-          retailer_id:id,
-          retailer:group.retailerName||null,
-          url:group.retailerUrl||null,
-          pet_id:(activePet()||{}).id||null,
-          products:(group.items||[]).map(x=>({product_id:x.realCoreProductId||null,offer_id:x.realCoreOfferId||null,name:x.name||'',price_eur:x.price||null}))
-        }).catch(()=>{});
+        if(group&&RC()){
+          const attributionId=('np-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10)).replace(/[^A-Za-z0-9:_./-]/g,'-');
+          RC().retailerHandoff({
+            market:'DE',
+            retailer_id:id,
+            retailer:group.retailerName||null,
+            url:group.retailerUrl||null,
+            pet_id:(activePet()||{}).id||null,
+            page_url:location.href,
+            referrer:document.referrer||null,
+            attribution_id:attributionId,
+            products:(group.items||[]).map(x=>({product_id:x.realCoreProductId||null,offer_id:x.realCoreOfferId||null,name:x.name||'',price_eur:x.price||null}))
+          }).catch(()=>{});
+        }
       }catch(e){}
       return originalOpen.apply(this,arguments);
     };
   }
 
-  // Existing cookie UI remains the source of user choice; CORE receives an
-  // auditable consent event. Analytics stays disabled unless separately enabled.
+  // Existing cookie UI remains the source of user choice. Passive first-party
+  // revenue measurement is sent only after the user selects the optional tier.
   document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('[data-cookie]').forEach(btn=>btn.addEventListener('click',()=>{
-      try{if(RC())RC().consentEvent({market:'DE',choice:btn.dataset.cookie||'essential',analytics_enabled:false,recorded_client_at:new Date().toISOString()}).catch(()=>{})}catch(e){}
+      const choice=btn.dataset.cookie||'essential';
+      try{if(RC())RC().consentEvent({market:'DE',choice,analytics_enabled:choice==='all',recorded_client_at:new Date().toISOString()}).catch(()=>{})}catch(e){}
+      if(choice==='all')recordLandingMeasurement();
     }));
+    recordLandingMeasurement();
     hydrateExactProducts();
   });
 
@@ -198,7 +255,9 @@
         email:(fields[1]&&fields[1].value||'').trim(),
         topic:(fields[2]&&fields[2].value||'').trim(),
         message:(fields[3]&&fields[3].value||'').trim(),
-        page:location.pathname
+        page:location.pathname,
+        page_url:location.href,
+        referrer:document.referrer||null
       };
       try{
         if(!RC())throw new Error('core_unavailable');
@@ -242,6 +301,8 @@
     version:'1.0',
     hydrateExactProducts,
     mode:'live-core-binding',
+    analytics:'consent-gated-core-revenue-loop',
+    affiliateAttribution:'core-event-id',
     affiliateRankingInfluence:false
   });
 })();
