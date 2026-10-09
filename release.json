@@ -1,28 +1,20 @@
 {
   "schema": "noevapet-release/1",
-  "release_id": "NOEVAPET_V27_REVENUE_LOOP_P4_20260924",
+  "release_id": "NOEVAPET_COMING_SOON_20261009",
   "vertical": "NoevaPet",
   "market": "DE",
-  "website_version": "V27 / V26 UX + REAL CORE v1.0 + Revenue Loop",
+  "website_version": "Coming Soon — temporary maintenance overlay",
   "runtime_stack": "STATIC_HOSTING",
-  "core_contract": "noevapet-real-core/1.0",
-  "launch_guard": "PUBLIC_INDEXABLE",
-  "indexing": "PUBLIC",
-  "website_gate": "PASS",
-  "source_branch": "p4/noevapet-revenue-loop-20260924",
-  "rollback_branch": "rollback-noevapet-production-20260924",
-  "revenue_loop": {
-    "provider": "NOEVA_CORE_REVENUE_LOOP",
-    "site_id": "noevapet.de",
-    "commercial_mode": "BOTH",
-    "consent_gated_analytics": true,
-    "core_handoff_attribution": true,
-    "affiliate_network_activation": false
-  },
-  "live_gate_checked_at": "2026-09-24T21:00:18Z",
-  "release_freeze": "FROZEN_WITH_GSC_PENDING",
-  "search_console": {
-    "state": "PENDING_CREDENTIALS",
-    "measurement_ready": false
-  }
+  "launch_guard": "COMING_SOON",
+  "indexing": "NOINDEX",
+  "website_gate": "HOLD",
+  "site_id": "noevapet.de",
+  "mode": "PUBLIC_COMING_SOON",
+  "source_branch": "production",
+  "deployment_branch": "production-de",
+  "previous_release_id": "NOEVAPET_V27_REVENUE_LOOP_P4_20260924",
+  "previous_production_sha": "790e27a7ae1a2367e3bb019781f8851189e68ad5",
+  "previous_production_de_sha": "2dadbb83877c8bc96f7630647e9b5b83b9347b6b",
+  "change_recorded_on": "2026-10-09",
+  "restoration": "revert overlay files using preserved Git history; requalify Website Gate before public indexing"
 }
