@@ -1,0 +1,70 @@
+name: NoevaPet Coming Soon privacy source and live qualification
+on:
+  push:
+    branches: [candidate/noevapet-coming-soon-privacy-20261012]
+    paths: ['.github/workflows/noevapet-privacy-qualification-20261012.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Qualify isolated privacy notice and unchanged live baseline
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,urllib.request,re
+          from pathlib import Path
+          from html.parser import HTMLParser
+          home=Path('coming-soon.html').read_text(encoding='utf-8')
+          legal=Path('privacy.html').read_text(encoding='utf-8')
+          imprint=Path('imprint.html').read_text(encoding='utf-8')
+          ht=Path('.htaccess').read_text(encoding='utf-8')
+          marker=json.loads(Path('release.json').read_text(encoding='utf-8'))
+          class L(HTMLParser):
+              def __init__(self):super().__init__();self.urls=[]
+              def handle_starttag(self,tag,attrs):
+                  d=dict(attrs)
+                  if tag in ('a','script','img','link'):self.urls.append((tag,d.get('href') or d.get('src') or ''))
+          hp=L();hp.feed(home)
+          lp=L();lp.feed(legal)
+          checks={
+            'company': 'NOEVA Systems e.K.' in legal,
+            'owner':'Frederick Ambrose Samuel' in legal,
+            'address':'Marienburger Straße 16' in legal and '56112 Lahnstein' in legal,
+            'contact':'mailto:info@noevasystems.com' in legal,
+            'registered_imprint_unchanged':'HRA 23554' in imprint,
+            'scope_three_hosts':all(x in legal for x in ('noevapet.de','noevapet.com','www.noevapet.com')),
+            'articles_13_rights':all(x in legal for x in ('Art. 6 Abs. 1 lit. f DSGVO','Art. 21 DSGVO','Aufsichtsbehörde','Löschung','Datenübertragbarkeit')),
+            'hosting_named':'Hostinger' in legal,
+            'log_categories':all(x in legal for x in ('IP-Adresse','HTTP-Status','Serverprotokolle')),
+            'contact_disclosed':'E-Mail-Kommunikation' in legal and 'Art. 6 Abs. 1 lit. b DSGVO' in legal,
+            'retention_criteria':'Dauer der Speicherung' in legal,
+            'analytics_not_fabricated':'kein Kontaktformular' in legal and 'keine Analyse- oder Marketing-Cookies' in legal,
+            'no_thirdparty_scripts':not any(tag=='script' for tag,_ in lp.urls+hp.urls),
+            'static_firstparty_assets':all(not re.match(r'https?://|//',url) for _,url in lp.urls+hp.urls),
+            'privacy_link':('/privacy.html' in [v for tag,v in hp.urls if tag=='a']),
+            'impressum_link':('/imprint.html' in [v for tag,v in hp.urls if tag=='a']),
+            'no_contact_in_footer':not any(tag=='a' and v.startswith('mailto:') for tag,v in hp.urls),
+            'legal_static_responsive':'@media(max-width:640px)' in legal,
+            'home_design_unchanged':'Gute Ideen <em>brauchen etwas Zeit.</em>' in home and 'Something special is on its way' in home,
+            'noindex_preserved':'noindex,nofollow,noarchive' in home and 'noindex,nofollow,noarchive' in legal and 'X-Robots-Tag "noindex, nofollow, noarchive"' in ht,
+            'rewrite_allow_both':'!^/imprint\\.html$' in ht and '!^/privacy\\.html$' in ht,
+            'old_product_routes_blocked':'RewriteRule ^ /coming-soon.html [L]' in ht,
+            'release_marker':marker['release_id']=='NOEVAPET_COMING_SOON_PRIVACY_20261012' and marker['mode']=='PUBLIC_COMING_SOON',
+            'stand':'Stand: 12. Oktober 2026' in legal,
+          }
+          expected_home='0c2cd8f065cf52013ff355bed5b13df4c070cdee16ba1afc5ed8c1b1b9200451'
+          expected_imprint='c541363b63becb88395b996d50a63f4d94e18ec6c2b5b616108ffa74c75cb387'
+          for domain in ('noevapet.de','noevapet.com','www.noevapet.com'):
+              for path,hash_expected in (('',expected_home),('imprint.html',expected_imprint),('privacy.html',expected_home)):
+                  req=urllib.request.Request('https://'+domain+'/'+path+'?privacy_preflight=20261012',headers={'Cache-Control':'no-cache','User-Agent':'NOEVA-Privacy-Preflight'})
+                  with urllib.request.urlopen(req,timeout=25) as res:
+                      body=res.read(100000)
+                      checks[domain+'_'+(path or 'home')+'_no_live_drift']=res.status==200 and hashlib.sha256(body).hexdigest()==hash_expected
+          print('NOEVAPET_PRIVACY_SOURCE_GATE='+json.dumps({'ok':all(checks.values()),'passed':sum(v is True for v in checks.values()),'total':len(checks),'checks':checks},sort_keys=True),flush=True)
+          if not all(checks.values()):raise SystemExit('HOLD:qualification_failed')
+          PY
