@@ -8,11 +8,12 @@ RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} ^www\.noevapet\.de$ [NC]
 RewriteRule ^ https://noevapet.de%{REQUEST_URI} [R=301,L]
 
-# Publicly accessible verification, status and overlay assets. Outdated privacy content is not publicly served; the verified operator Impressum is exempt.
+# Publicly accessible verification, status and overlay assets. The verified operator Impressum and updated privacy notice are public.
 RewriteCond %{REQUEST_URI} !^/coming-soon\.html$ [NC]
 RewriteCond %{REQUEST_URI} !^/robots\.txt$ [NC]
 RewriteCond %{REQUEST_URI} !^/release\.json$ [NC]
 RewriteCond %{REQUEST_URI} !^/imprint\.html$ [NC]
+RewriteCond %{REQUEST_URI} !^/privacy\.html$ [NC]
 RewriteCond %{REQUEST_URI} !^/assets/noevapet-logo-v13\.png$ [NC]
 RewriteCond %{REQUEST_URI} !^/assets/hero-pets\.png$ [NC]
 RewriteCond %{REQUEST_URI} !^/assets/icon-32\.png$ [NC]
