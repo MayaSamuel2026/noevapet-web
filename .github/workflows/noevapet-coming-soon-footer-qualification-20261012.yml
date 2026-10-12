@@ -1,0 +1,55 @@
+name: NoevaPet Coming Soon footer source + live baseline qualification
+on:
+  push:
+    branches: [candidate/remove-invalid-footer-links-20261012]
+    paths: ['.github/workflows/noevapet-coming-soon-footer-qualification-20261012.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify preservation, footer removal, noindex and old-page overlay routing
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import urllib.request,hashlib,json
+          p=Path('coming-soon.html').read_text(encoding='utf-8')
+          h=Path('.htaccess').read_text(encoding='utf-8')
+          class Parser(HTMLParser):
+              def __init__(self):super().__init__();self.links=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag=='a':self.links.append(dict(attrs).get('href',''))
+          tree=Parser();tree.feed(p)
+          checks={
+            'responsive_meta':'name="viewport"' in p and '@media(max-width:790px)' in p,
+            'brand_logo':'/assets/noevapet-logo-v13.png' in p,
+            'hero_image':'/assets/hero-pets.png' in p,
+            'de_canonical_text':'Gute Ideen <em>brauchen etwas Zeit.</em>' in p,
+            'en_companion_text':'Something special is on its way' in p,
+            'footer_without_links':not tree.links or all(not(x.startswith('/imprint') or x.startswith('/privacy') or x.startswith('mailto:')) for x in tree.links),
+            'no_legal_footer_nav':'aria-label="Rechtliche Informationen"' not in p,
+            'powered_by_line':'© 2026 NoevaPet · Powered by NOEVA Systems' in p,
+            'source_noindex':'<meta name="robots" content="noindex,nofollow,noarchive">' in p,
+            'header_noindex':'Header always set X-Robots-Tag "noindex, nofollow, noarchive"' in h,
+            'overlay_all_paths':'RewriteRule ^ /coming-soon.html [L]' in h,
+            'no_legal_exemptions':'!^/imprint' not in h and '!^/privacy' not in h,
+            'verification_allowed':all(x in h for x in ('!^/robots','!^/release','!^/assets')),
+            'www_de_redirect_preserved':'https://noevapet.de%{REQUEST_URI}' in h
+          }
+          baseline='0a219ca377b13f1f5c0ea0d7a65120838e217d8baef157855490bac7c88411db'
+          for host in ('noevapet.de','noevapet.com','www.noevapet.com'):
+              req=urllib.request.Request('https://'+host+'/',headers={'Cache-Control':'no-cache','User-Agent':'NOEVA-ComingSoon-Predeploy-20261012'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  body=r.read(100000);hdr=r.headers
+                  checks[host+'.status_200']=r.status==200
+                  checks[host+'.live_baseline_unchanged']=hashlib.sha256(body).hexdigest()==baseline
+                  checks[host+'.live_noindex']='noindex' in hdr.get('X-Robots-Tag','').lower()
+          print('NOEVAPET_FOOTER_SOURCE_GATE='+json.dumps({'checks':checks,'passed':sum(v is True for v in checks.values()),'total':len(checks),'ok':all(checks.values())},sort_keys=True))
+          if not all(checks.values()):raise SystemExit('HOLD:qualification_not_passed')
+          PY
