@@ -1,9 +1,9 @@
 {
   "schema": "noevapet-release/1",
-  "release_id": "NOEVAPET_COMING_SOON_IMPRESSUM_20261012",
+  "release_id": "NOEVAPET_COMING_SOON_PRIVACY_20261012",
   "vertical": "NoevaPet",
   "market": "DE",
-  "website_version": "Coming Soon — operator imprint aligned to registered NOEVA Systems e.K.",
+  "website_version": "Coming Soon — registered operator + privacy notice",
   "runtime_stack": "STATIC_HOSTING",
   "launch_guard": "COMING_SOON",
   "indexing": "NOINDEX",
@@ -12,7 +12,7 @@
   "mode": "PUBLIC_COMING_SOON",
   "source_branch": "production",
   "deployment_branch": "production-de",
-  "previous_release_id": "NOEVAPET_COMING_SOON_20261009",
+  "previous_release_id": "NOEVAPET_COMING_SOON_IMPRESSUM_20261012",
   "previous_production_sha": "790e27a7ae1a2367e3bb019781f8851189e68ad5",
   "previous_production_de_sha": "2dadbb83877c8bc96f7630647e9b5b83b9347b6b",
   "change_recorded_on": "2026-10-12",
@@ -20,10 +20,11 @@
   "change_scope": [
     "coming-soon.html",
     ".htaccess",
-    "imprint.html",
+    "privacy.html",
     "release.json"
   ],
   "live_verification": "PENDING",
   "legal_operator": "NOEVA Systems e.K.",
-  "legal_registration": "Amtsgericht Koblenz, HRA 23554"
+  "legal_registration": "Amtsgericht Koblenz, HRA 23554",
+  "privacy_notice_scope": "CURRENT_COMING_SOON_ONLY"
 }
