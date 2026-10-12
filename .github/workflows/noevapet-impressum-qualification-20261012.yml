@@ -1,0 +1,60 @@
+name: NoevaPet NOEVA registered Impressum qualification
+on:
+  push:
+    branches: [candidate/noevapet-registered-impressum-20261012]
+    paths: ['.github/workflows/noevapet-impressum-qualification-20261012.yml']
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate exact company details, links, routing, and public live baseline
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import hashlib,urllib.request,urllib.error,json
+          page=Path('coming-soon.html').read_text(encoding='utf-8')
+          imprint=Path('imprint.html').read_text(encoding='utf-8')
+          config=Path('.htaccess').read_text(encoding='utf-8')
+          release=json.loads(Path('release.json').read_text(encoding='utf-8'))
+          class Links(HTMLParser):
+              def __init__(self):super().__init__();self.links=[]
+              def handle_starttag(self,t,attrs):
+                  if t=='a':self.links.append(dict(attrs).get('href'))
+          home=Links();home.feed(page);legal=Links();legal.feed(imprint)
+          checks={
+           'brand_preserved':'noevapet-logo-v13.png' in page and 'hero-pets.png' in page,
+           'responsive_overlay':'@media(max-width:790px)' in page,
+           'imprint_link_only':home.links.count('/imprint.html')==1 and not any(x and ('/privacy.html' in x or x.startswith('mailto:')) for x in home.links),
+           'operator':'NOEVA Systems e.K.' in imprint,
+           'registered_holder':'Frederick Ambrose Samuel' in imprint,
+           'address':'Marienburger Straße 16' in imprint and '56112 Lahnstein' in imprint,
+           'court':'Amtsgericht Koblenz' in imprint,
+           'register':'HRA 23554' in imprint,
+           'email':'mailto:info@noevasystems.com' in legal.links,
+           'no_fabricated_tax_data':'USt-IdNr.' not in imprint and 'in Gründung' not in imprint,
+           'imprint_allowed':'!^/imprint\\.html$' in config,
+           'privacy_kept_blocked':'!^/privacy' not in config,
+           'same_coming_soon_design':'Gute Ideen <em>brauchen etwas Zeit.</em>' in page and 'Something special is on its way.' in page,
+           'no_index_preserved':'noindex,nofollow,noarchive' in page and 'noindex, nofollow, noarchive' in config,
+           'release_marker':release.get('release_id')=='NOEVAPET_COMING_SOON_IMPRESSUM_20261012',
+           'legal_responsive':'@media(max-width:640px)' in imprint,
+          }
+          original='eee08dc6b9022291f60ab1a3d501a2d11f5957dca6cf2be654646fafe4907cd0'
+          for domain in ('noevapet.de','noevapet.com','www.noevapet.com'):
+              for path in ('','imprint.html'):
+                  url='https://'+domain+'/'+path+'?qualification=20261012'
+                  req=urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'NoevaPet-Legal-Qualification/1.0'})
+                  with urllib.request.urlopen(req,timeout=30) as resp:
+                      body=resp.read(150000)
+                      checks[domain+':'+(path or 'home')+'_baseline']=resp.status==200 and hashlib.sha256(body).hexdigest()==original
+          print('NOEVAPET_LEGAL_SOURCE_GATE='+json.dumps({'passed':sum(x is True for x in checks.values()),'total':len(checks),'ok':all(checks.values()),'checks':checks},sort_keys=True),flush=True)
+          if not all(checks.values()):raise SystemExit('HOLD:source_or_live_baseline_qualification_failed')
+          PY
