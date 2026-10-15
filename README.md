@@ -1,3 +1,5 @@
+> **15 October 2026 architecture update:** The central NOEVA CORE control platform is being retired ([decision](https://github.com/MayaSamuel2026/noeva-systems-web/issues/204)). Historic `REAL CORE` NoevaPet features below are *not* permission to remove pricing, shopping, recommendation or enquiry functionality. Their existing live API dependency requires a tested, NoevaPet-owned replacement before the old platform can be disconnected. Preserve the `production` and `production-de` branches.
+
 # NoevaPet Web
 
 Customer-facing NoevaPet website for Germany.
